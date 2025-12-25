@@ -10,7 +10,7 @@ export function Providers({
   session,
 }: {
   children: React.ReactNode;
-  session: Session | null;
+  session: Session | null | undefined;
 }) {
   return (
     <SessionProvider session={session}>
