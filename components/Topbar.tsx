@@ -93,6 +93,8 @@ export default function Topbar() {
                 src={session.user.image}
                 alt="User Avatar"
                 className="w-full h-full rounded-full"
+                width={40}
+                height={40}
               />
             ) : (
               <User className="w-full h-full rounded-full" />
@@ -113,6 +115,8 @@ export default function Topbar() {
                   src={session.user.image}
                   alt="User Avatar"
                   className="w-16 h-16 rounded-full"
+                  width={96}
+                  height={96}
                 />
               ) : (
                 <User className="w-full h-full rounded-full" />
