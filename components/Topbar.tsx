@@ -32,6 +32,7 @@ import { Separator } from "./ui/separator";
 import React from "react";
 import SearchInput from "./SearchInput";
 import Image from "next/image";
+import { Badge } from "./ui/badge";
 
 export default function Topbar() {
   const { setTheme, theme: currentTheme } = useTheme();
@@ -109,7 +110,7 @@ export default function Topbar() {
             }}
           >
             {/* User div */}
-            <div className="w-24 h-24 flex flex-col items-center content-center">
+            <div className="w-full h-24 px-4 flex flex-row items-center content-center">
               {session && session.user?.image ? (
                 <Image
                   src={session.user.image}
@@ -121,9 +122,16 @@ export default function Topbar() {
               ) : (
                 <User className="w-full h-full rounded-full" />
               )}
-              <Label className="p-2 text-xl font-bold">
-                {session?.user?.name}
-              </Label>
+              {session && session.user?.role && session.user.name ? (
+                <div className="flex flex-1 h-full gap-2 relative">
+                  <Label className="text-4xl font-bold m-auto">
+                    {session?.user?.name}
+                  </Label>
+                  <Badge className="bg-foreground text-background font-bold rounded-md absolute bottom-0 right-0">
+                    {session.user.role}
+                  </Badge>
+                </div>
+              ) : null}
             </div>
             <Separator className="my-3 w-full" />
             {/* Miscellaneous div */}
