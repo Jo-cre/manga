@@ -13,7 +13,6 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import {
   SettingsIcon,
-  Sun,
   User,
   Check,
   LogOutIcon,
@@ -32,6 +31,7 @@ import {
 import { Separator } from "./ui/separator";
 import React from "react";
 import SearchInput from "./SearchInput";
+import Image from "next/image";
 
 export default function Topbar() {
   const { setTheme, theme: currentTheme } = useTheme();
@@ -89,7 +89,7 @@ export default function Topbar() {
             }}
           >
             {session && session.user?.image ? (
-              <img
+              <Image
                 src={session.user.image}
                 alt="User Avatar"
                 className="w-full h-full rounded-full"
@@ -109,7 +109,7 @@ export default function Topbar() {
             {/* User div */}
             <div className="w-24 h-24 flex flex-col items-center content-center">
               {session && session.user?.image ? (
-                <img
+                <Image
                   src={session.user.image}
                   alt="User Avatar"
                   className="w-16 h-16 rounded-full"

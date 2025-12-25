@@ -18,7 +18,8 @@ export function ThemeProvider({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const handleMount = () => setMounted(true);
+    handleMount();
   }, []);
 
   if (!mounted) return <div />; // Esconde até que o tema seja carregado

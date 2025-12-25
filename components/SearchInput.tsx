@@ -1,5 +1,4 @@
 import React from "react";
-import { Input } from "./ui/input";
 
 export default function SearchInput() {
   const [userOpen, setUserOpen] = React.useState(false);
