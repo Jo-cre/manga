@@ -30,6 +30,7 @@ model User {
   name      String?
   email     String? @unique
   image     String?
+  banner    String?  @default("")
   role      Role    @default(USER)
   createdAt DateTime @default(now())
   userSources   UserSource[]

@@ -21,9 +21,9 @@ export function Providers({
         disableTransitionOnChange
         themes={["light", "dark", "dracula", "nord", "solarized"]}
       >
-        <SidebarProvider>
+        <SidebarProvider defaultOpen={false}>
           <Sidebar />
-          <main>{children}</main>
+          {children}
         </SidebarProvider>
       </ThemeProvider>
     </SessionProvider>

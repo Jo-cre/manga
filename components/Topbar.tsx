@@ -2,7 +2,6 @@
 
 import { signOut, useSession } from "next-auth/react";
 import SidebarButton from "./SidebarButton";
-import { useSidebar } from "./ui/sidebar";
 import {
   Popover,
   PopoverContent,
@@ -29,7 +28,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { Separator } from "./ui/separator";
-import React from "react";
+import { useEffect, useState } from "react";
 import SearchInput from "./SearchInput";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
@@ -37,13 +36,12 @@ import { Badge } from "./ui/badge";
 export default function Topbar() {
   const { setTheme, theme: currentTheme } = useTheme();
   const { data: session } = useSession();
-  const [themeOpen, setThemeOpen] = React.useState(false);
-  const width = useSidebar().open ? "calc(100% - 16rem)" : "100%";
-  const [userOpen, setUserOpen] = React.useState(false);
+  const [themeOpen, setThemeOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
 
-  const [scrolled, setScrolled] = React.useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 10);
     };
@@ -66,10 +64,9 @@ export default function Topbar() {
   return (
     <div
       className={cn(
-        "fixed z-10 h-13 flex items-center px-4 py-1.5 transition-all duration-300",
+        "sticky top-0 z-10 h-13 -mb-13 flex flex-1 items-center px-4 py-1.5 transition-all duration-300",
         scrolled ? "bg-sidebar" : "bg-transparent"
       )}
-      style={{ width }}
     >
       <SidebarButton />
       <SearchInput />
@@ -122,9 +119,14 @@ export default function Topbar() {
               ) : (
                 <User className="w-full h-full rounded-full" />
               )}
-              {session && session.user?.role && session.user.name ? (
-                <div className="flex flex-1 h-full gap-2 relative">
-                  <Label className="text-4xl font-bold m-auto">
+              {session && session.user?.role && session.user?.name ? (
+                <div className="flex flex-1 h-full gap-2 relative overflow-x-auto">
+                  <Label
+                    className="block w-full text-center font-bold m-auto 
+                                text-[clamp(1.25rem,12cqw,2.25rem)]
+                                truncate whitespace-nowrap overflow-hidden"
+                    title={session?.user?.name || ""}
+                  >
                     {session?.user?.name}
                   </Label>
                   <Badge className="bg-foreground text-background font-bold rounded-md absolute bottom-0 right-0">
@@ -152,10 +154,10 @@ export default function Topbar() {
               </button>
               <button
                 className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
-                onClick={() => (window.location.href = "/user/me")}
+                onClick={() => (window.location.href = "/adapters")}
               >
                 <ListPlus size={20} className="ml-3.5" />
-                <span className="mb-1 ml-[-2]">Browse fonts</span>
+                <span className="mb-1 ml-[-2]">Browse adapters</span>
               </button>
             </div>
             <Separator className="my-3 w-full" />
@@ -213,7 +215,7 @@ export default function Topbar() {
               </div>
               <button
                 className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
-                onClick={() => signOut()}
+                onClick={() => signOut({ callbackUrl: "/" })}
               >
                 <LogOutIcon size={20} className="ml-3.5" />
                 <span className="mb-1 ml-[-2]">LogOut</span>

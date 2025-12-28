@@ -19,10 +19,7 @@ export const authOptions: NextAuthOptions = {
 
       await prisma.user.upsert({
         where: { email: user.email },
-        update: {
-          name: user.name,
-          image: user.image,
-        },
+        update: {},
         create: {
           email: user.email,
           name: user.name,
@@ -39,13 +36,21 @@ export const authOptions: NextAuthOptions = {
         where: { email: token.email },
         select: {
           id: true,
+          name: true,
+          image: true,
+          banner: true,
           role: true,
+          createdAt: true,
         },
       });
 
       if (dbUser) {
         token.id = dbUser.id;
+        token.name = dbUser.name;
+        token.image = dbUser.image;
+        token.banner = dbUser.banner;
         token.role = dbUser.role;
+        token.createdAt = dbUser.createdAt;
       }
 
       return token;
@@ -54,8 +59,13 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.image = token.image as string | null;
+        session.user.banner = token.banner as string | null;
         session.user.role = token.role as string;
+        session.user.createdAt = token.createdAt as Date;
       }
+
       return session;
     },
   },
