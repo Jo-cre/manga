@@ -11,6 +11,7 @@ import Topbar from "@/components/Topbar";
 import { toast } from "sonner";
 import BackButton from "@/components/BackButton";
 import { Session } from "next-auth";
+import { useTranslations } from "next-intl";
 
 interface UpdateUserPayload {
   name?: string;
@@ -28,6 +29,8 @@ function ProfileEditor({
     data?: Partial<Session> | Record<string, unknown>
   ) => Promise<Session | null>;
 }) {
+  const t = useTranslations("UserPage");
+
   const [name, setName] = useState(session.user.name ?? "");
   const [avatar, setAvatar] = useState<string | null>(
     session.user.image ?? null
@@ -79,7 +82,7 @@ function ProfileEditor({
       });
 
       if (!res.ok) {
-        toast("Failed to update profile");
+        toast(t("toast.fail"));
         return;
       }
       const updatedUser = await res.json();
@@ -95,9 +98,9 @@ function ProfileEditor({
       });
       setAvatarFile(null);
       setBannerFile(null);
-      toast("Profile has been Updated");
+      toast(t("toast.sucess"));
     } catch (e) {
-      toast(`Error saving profile: ${e}`);
+      toast(t("toast.error") + e);
     }
   }
 
@@ -122,7 +125,7 @@ function ProfileEditor({
               />
             ) : (
               <div className="flex h-full items-center justify-center text-muted-foreground">
-                No banner
+                {t("noBanner")}
               </div>
             )}
             <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition">
@@ -179,7 +182,7 @@ function ProfileEditor({
           {/* Content */}
           <div className="px-10 pb-10 pt-24 flex flex-col gap-6">
             <div>
-              <Label>Name</Label>
+              <Label>{t("name")}</Label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -188,23 +191,23 @@ function ProfileEditor({
             </div>
             <div className="grid grid-cols-2 gap-6 text-sm max-w-2xl">
               <div>
-                <Label>Email</Label>
+                <Label>{t("email")}</Label>
                 <p className="text-muted-foreground">{session.user.email}</p>
               </div>
               <div>
-                <Label>Role</Label>
+                <Label>{t("role")}</Label>
                 <p className="uppercase text-muted-foreground">
                   {session.user.role}
                 </p>
               </div>
               <div>
-                <Label>Created at</Label>
+                <Label>{t("createdAt")}</Label>
                 <p className="text-muted-foreground">
                   {new Date(session.user.createdAt).toLocaleDateString("pt-BR")}
                 </p>
               </div>
               <div>
-                <Label>ID</Label>
+                <Label>{t("id")}</Label>
                 <p className="font-mono text-xs text-muted-foreground break-all">
                   {session.user.id}
                 </p>
@@ -218,7 +221,7 @@ function ProfileEditor({
             className="absolute bottom-6 right-6 gap-2"
           >
             <Save size={18} />
-            Save
+            {t("saveButton")}
           </Button>
         </Card>
       </div>
@@ -229,17 +232,20 @@ function ProfileEditor({
 // load manager
 export default function LocalUserPage() {
   const { data: session, status, update } = useSession();
+  const t = useTranslations("UserPage");
 
   if (status === "loading") {
     return (
-      <div className="flex flex-1 items-center justify-center">Loading...</div>
+      <div className="flex flex-1 items-center justify-center">
+        {t("loading")}
+      </div>
     );
   }
 
   if (!session) {
     return (
       <div className="flex flex-1 items-center justify-center text-4xl">
-        No session available
+        {t("noSession")}
       </div>
     );
   }

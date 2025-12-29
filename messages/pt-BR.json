@@ -1,0 +1,31 @@
+{
+  "TopBar": {
+    "userPopover": {
+      "profile": "Perfil",
+      "saved": "Salvos",
+      "adapters": "Adaptadores",
+      "settings": "Opções",
+      "theme": "Tema",
+      "searchTheme": "Pesquisar",
+      "noTheme": "Nenhum tema encontrado",
+      "logOut": "Sair"
+    }
+  },
+
+  "UserPage": {
+    "name": "Nome",
+    "email": "Email",
+    "role": "Cargo",
+    "createdAt": "Criado em",
+    "id": "Ientificador",
+    "saveButton": "Salvar",
+    "noBanner": "Banner indisponivel",
+    "loading": "Carregando...",
+    "noSession": "Sem sessão disponivel",
+    "toast": {
+      "sucess": "Perfil atualizado com sucesso",
+      "fail": "Falha ao atualizar o perfil",
+      "error": "Erro ao atualizar perfil: "
+    }
+  }
+}

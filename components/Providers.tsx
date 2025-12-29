@@ -4,13 +4,18 @@ import { Sidebar } from "./Sidebar";
 import { ThemeProvider } from "./ThemeProvider";
 import { SidebarProvider } from "./ui/sidebar";
 import { Session } from "next-auth";
+import { NextIntlClientProvider } from "next-intl";
 
 export function Providers({
   children,
   session,
+  locale,
+  messages,
 }: {
   children: React.ReactNode;
   session: Session | null | undefined;
+  locale: string;
+  messages: Record<string, unknown>;
 }) {
   return (
     <SessionProvider session={session}>
@@ -21,10 +26,12 @@ export function Providers({
         disableTransitionOnChange
         themes={["light", "dark", "dracula", "nord", "solarized"]}
       >
-        <SidebarProvider defaultOpen={false}>
-          <Sidebar />
-          {children}
-        </SidebarProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <SidebarProvider defaultOpen={false}>
+            <Sidebar />
+            {children}
+          </SidebarProvider>
+        </NextIntlClientProvider>
       </ThemeProvider>
     </SessionProvider>
   );

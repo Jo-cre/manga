@@ -1,0 +1,31 @@
+{
+  "TopBar": {
+    "userPopover": {
+      "profile": "Profile",
+      "saved": "Saved",
+      "adapters": "Adapters",
+      "settings": "Settings",
+      "theme": "Theme",
+      "searchTheme": "Search",
+      "noTheme": "Any theme founded",
+      "logOut": "Logout"
+    }
+  },
+
+  "UserPage": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "createdAt": "Created at",
+    "id": "Identifier",
+    "saveButton": "Save",
+    "noBanner": "Banner unavailable",
+    "loading": "Loading...",
+    "noSession": "No session available",
+    "toast": {
+      "success": "Profile updated successfully",
+      "fail": "Failed to update profile",
+      "error": "Error updating profile: "
+    }
+  }
+}

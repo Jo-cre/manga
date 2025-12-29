@@ -32,12 +32,15 @@ import { useEffect, useState } from "react";
 import SearchInput from "./SearchInput";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
+import { useTranslations } from "next-intl";
 
 export default function Topbar() {
   const { setTheme, theme: currentTheme } = useTheme();
   const { data: session } = useSession();
   const [themeOpen, setThemeOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
+
+  const t = useTranslations("TopBar.userPopover");
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -143,21 +146,21 @@ export default function Topbar() {
                 onClick={() => (window.location.href = "/user/me")}
               >
                 <User size={20} className="ml-3.5" />
-                <span className="mb-1 ml-[-2]">Profile</span>
+                <span className="mb-1 ml-[-2]">{t("profile")}</span>
               </button>
               <button
                 className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
                 onClick={() => (window.location.href = "/user/saved")}
               >
                 <Bookmark size={20} className="ml-3.5" />
-                <span className="mb-1 ml-[-2]">Saved</span>
+                <span className="mb-1 ml-[-2]">{t("saved")}</span>
               </button>
               <button
                 className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
                 onClick={() => (window.location.href = "/adapters")}
               >
                 <ListPlus size={20} className="ml-3.5" />
-                <span className="mb-1 ml-[-2]">Browse adapters</span>
+                <span className="mb-1 ml-[-2]">{t("adapters")}</span>
               </button>
             </div>
             <Separator className="my-3 w-full" />
@@ -165,27 +168,27 @@ export default function Topbar() {
             <div className="w-full flex flex-col font-bold">
               <div className="w-full flex flex-row gap-2">
                 <button
-                  className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-center hover:bg-muted/50 rounded-md p-2 transition"
+                  className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
                   onClick={() => (window.location.href = "/settings")}
                 >
-                  <SettingsIcon size={20} />
-                  <span className="mb-1">Settings</span>
+                  <SettingsIcon size={20} className="ml-3.5" />
+                  <span className="mb-1 ml-[-2]">{t("settings")}</span>
                 </button>
                 <Popover open={themeOpen} onOpenChange={setThemeOpen}>
                   <PopoverTrigger asChild>
                     <button className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-center hover:bg-muted/50 rounded-md p-2 transition">
                       <PaintbrushIcon size={20} />
-                      <span className="mb-1">Theme</span>
+                      <span className="mb-1">{t("theme")}</span>
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="m-0 p-0 mr-8 w-56">
                     <Command>
                       <CommandInput
-                        placeholder="Search theme..."
+                        placeholder={t("searchTheme")}
                         className="h-9"
                       />
                       <CommandList>
-                        <CommandEmpty>Any theme founded.</CommandEmpty>
+                        <CommandEmpty>{t("noTheme")}</CommandEmpty>
                         <CommandGroup>
                           {themes.map((t) => (
                             <CommandItem
@@ -218,7 +221,7 @@ export default function Topbar() {
                 onClick={() => signOut({ callbackUrl: "/" })}
               >
                 <LogOutIcon size={20} className="ml-3.5" />
-                <span className="mb-1 ml-[-2]">LogOut</span>
+                <span className="mb-1 ml-[-2]">{t("logOut")}</span>
               </button>
             </div>
           </PopoverContent>
