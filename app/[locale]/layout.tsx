@@ -39,8 +39,9 @@ export default async function RootLayout({
   }
   const messages = await getMessages();
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale}>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
       >
         <Providers session={session} locale={locale} messages={messages}>

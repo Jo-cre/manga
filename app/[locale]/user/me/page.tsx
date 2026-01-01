@@ -13,6 +13,7 @@ import BackButton from "@/components/BackButton";
 import { Session } from "next-auth";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface UpdateUserPayload {
   name?: string;
@@ -31,7 +32,6 @@ function ProfileEditor({
   ) => Promise<Session | null>;
 }) {
   const t = useTranslations("UserPage");
-
   const locale = useLocale();
 
   const [name, setName] = useState(session.user.name ?? "");
@@ -239,8 +239,59 @@ export default function LocalUserPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        {t("loading")}
+      <div className="flex flex-1 flex-col">
+        <Topbar />
+
+        <div className="flex flex-1 justify-center px-10 py-20">
+          <Card className="relative w-full max-w-5xl overflow-hidden py-0">
+            {/* Banner */}
+            <Skeleton className="h-56 w-full rounded-none" />
+
+            {/* Avatar */}
+            <div className="absolute right-10 top-50">
+              <Skeleton className="w-40 h-40 rounded-full border-2" />
+            </div>
+
+            {/* Content */}
+            <div className="px-10 pb-10 pt-24 flex flex-col gap-6">
+              {/* Name */}
+              <div className="flex flex-col gap-2 max-w-md">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+
+              {/* Grid info */}
+              <div className="grid grid-cols-2 gap-6 text-sm max-w-2xl">
+                {/* Email */}
+                <div className="flex flex-col gap-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+
+                {/* Role */}
+                <div className="flex flex-col gap-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-24" />
+                </div>
+
+                {/* Created at */}
+                <div className="flex flex-col gap-2">
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+
+                {/* ID */}
+                <div className="flex flex-col gap-2">
+                  <Skeleton className="h-4 w-10" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              </div>
+            </div>
+
+            {/* Save button */}
+            <Skeleton className="absolute bottom-6 right-6 h-10 w-28 rounded-md" />
+          </Card>
+        </div>
       </div>
     );
   }

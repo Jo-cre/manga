@@ -38,7 +38,11 @@ export default async function UserPage({
   const data: dataModel | null = await getData(id);
 
   if (!data) {
-    return <div>404 User not found.</div>;
+    return (
+      <div className="flex flex-1 flex-col items-center content-center text-6xl h-full">
+        404 User not found.
+      </div>
+    );
   }
 
   return (
