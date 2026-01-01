@@ -1,8 +1,9 @@
 import BackButton from "@/components/BackButton";
 import Topbar from "@/components/Topbar";
 import { Card } from "@/components/ui/card";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { Label } from "@/components/ui/label";
 import { User } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 
 interface dataModel {
@@ -29,9 +30,10 @@ async function getData(id: string): Promise<dataModel | null> {
 export default async function UserPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 }) {
-  const { id } = await params;
+  const { id, locale } = await params;
+  const t = await getTranslations("UserPage");
 
   const data: dataModel | null = await getData(id);
 
@@ -57,7 +59,7 @@ export default async function UserPage({
               />
             ) : (
               <div className="flex h-full items-center justify-center text-muted-foreground">
-                No banner
+                {t("noBanner")}
               </div>
             )}
           </div>
@@ -82,7 +84,7 @@ export default async function UserPage({
           <div className="px-10 pb-10 pt-24 flex flex-col gap-6">
             {/* Name */}
             <div>
-              <Label>Name</Label>
+              <Label>{t("name")}</Label>
               <Label className="text-4xl font-bold bg-transparent outline-none border-b w-full">
                 {data.name}
               </Label>
@@ -91,24 +93,24 @@ export default async function UserPage({
             {/* Read only */}
             <div className="grid grid-cols-2 gap-6 text-sm max-w-2xl">
               <div>
-                <Label>Email</Label>
+                <Label>{t("email")}</Label>
                 <p className="text-muted-foreground">{data.email}</p>
               </div>
 
               <div>
-                <Label>Role</Label>
+                <Label>{t("role")}</Label>
                 <p className="uppercase text-muted-foreground">{data.role}</p>
               </div>
 
               <div>
-                <Label>Created at</Label>
+                <Label>{t("createdAt")}</Label>
                 <p className="text-muted-foreground">
-                  {new Date(data.createdAt).toLocaleDateString("pt-BR")}
+                  {new Date(data.createdAt).toLocaleDateString(locale)}
                 </p>
               </div>
 
               <div>
-                <Label>ID</Label>
+                <Label>{t("id")}</Label>
                 <p className="font-mono text-xs text-muted-foreground break-all">
                   {data.id}
                 </p>

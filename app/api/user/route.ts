@@ -5,14 +5,12 @@ import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
+  const text = searchParams.get("text");
   const email = searchParams.get("email");
   const id = searchParams.get("id");
 
-  if (!email && !id) {
-    return NextResponse.json(
-      { error: "Email or id is required" },
-      { status: 400 }
-    );
+  if (!email && !id && !text) {
+    return NextResponse.json(await prisma.user.findMany());
   }
 
   let user = null;
@@ -20,6 +18,24 @@ export async function GET(request: Request) {
     user = await prisma.user.findUnique({ where: { email } });
   } else if (id) {
     user = await prisma.user.findUnique({ where: { id } });
+  } else if (text) {
+    user = await prisma.user.findMany({
+      take: 10,
+      orderBy: { createdAt: "desc" },
+      where: {
+        OR: [
+          {
+            name: {
+              contains: text,
+              mode: "insensitive",
+            },
+          },
+          {
+            id: text,
+          },
+        ],
+      },
+    });
   }
 
   if (!user) {

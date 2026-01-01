@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import BackButton from "@/components/BackButton";
 import { Session } from "next-auth";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 interface UpdateUserPayload {
   name?: string;
@@ -30,6 +31,8 @@ function ProfileEditor({
   ) => Promise<Session | null>;
 }) {
   const t = useTranslations("UserPage");
+
+  const locale = useLocale();
 
   const [name, setName] = useState(session.user.name ?? "");
   const [avatar, setAvatar] = useState<string | null>(
@@ -203,7 +206,7 @@ function ProfileEditor({
               <div>
                 <Label>{t("createdAt")}</Label>
                 <p className="text-muted-foreground">
-                  {new Date(session.user.createdAt).toLocaleDateString("pt-BR")}
+                  {new Date(session.user.createdAt).toLocaleDateString(locale)}
                 </p>
               </div>
               <div>

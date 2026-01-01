@@ -27,5 +27,8 @@
       "fail": "Failed to update profile",
       "error": "Error updating profile: "
     }
+  },
+  "Search": {
+    "users": "Users"
   }
 }
