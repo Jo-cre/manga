@@ -7,6 +7,9 @@ import UserButton from "./UserButton";
 import { Label } from "./ui/label";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "./ui/skeleton";
+import { MangaSearchResult } from "@/manga/types";
+import { searchMangas } from "@/manga/services/searchManga";
+import MangaButton from "./MangaButton";
 
 interface userData {
   id: string;
@@ -21,7 +24,14 @@ export default function SearchInput() {
   const [userOpen, setUserOpen] = useState(false);
   const [text, setText] = useState<string | null>(null);
   const [debounced, setDebounced] = useState(text);
-  const [userItems, setUserItems] = useState<userData[] | []>([]);
+  const [userItems, setUserItems] = useState<userData[] | null>(null);
+  const [mangaItems, setMangaItems] = useState<MangaSearchResult[] | null>(
+    null
+  );
+  const enabledAdapters: string[] = JSON.parse(
+    localStorage.getItem("enabled-manga-sources") ?? "[]"
+  );
+
   const [loading, setLoading] = useState(false);
 
   const t = useTranslations("Search");
@@ -39,7 +49,8 @@ export default function SearchInput() {
   useEffect(() => {
     if (!debounced || debounced.length < 2) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      setUserItems((prev) => (prev.length ? [] : prev));
+      setMangaItems((prev) => (prev && prev.length ? null : prev));
+      setUserItems((prev) => (prev && prev.length ? null : prev));
       return;
     }
     setLoading(true);
@@ -47,6 +58,18 @@ export default function SearchInput() {
     fetch(`/api/user?text=${encodeURIComponent(debounced)}`)
       .then((res) => res.json())
       .then(setUserItems)
+
+      .finally(() => {
+        setLoading(false);
+      });
+
+    fetch(
+      `/api/manga?text=${encodeURIComponent(
+        debounced
+      )}&adapters=${enabledAdapters.join(",")}`
+    )
+      .then((res) => res.json())
+      .then(setMangaItems)
 
       .finally(() => {
         setLoading(false);
@@ -94,12 +117,20 @@ export default function SearchInput() {
                 </div>
               </div>
             )}
-            {userItems.length > 0 && (
+            {mangaItems && mangaItems.length > 0 && (
+              <Label className="font-bold text-2xl">{t("manga")}</Label>
+            )}
+            {mangaItems &&
+              mangaItems.map((item, i) => (
+                <MangaButton data={item} key={i + "_" + item} />
+              ))}
+            {userItems && userItems.length > 0 && (
               <Label className="font-bold text-2xl">{t("users")}</Label>
             )}
-            {userItems.map((item, i) => (
-              <UserButton data={item} key={i + "_" + item} />
-            ))}
+            {userItems &&
+              userItems.map((item, i) => (
+                <UserButton data={item} key={i + "_" + item} />
+              ))}
           </Card>
         </PopoverContent>
       </Popover>

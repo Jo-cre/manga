@@ -33,10 +33,11 @@ import SearchInput from "./SearchInput";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
 import { useTranslations } from "next-intl";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-export default function Topbar() {
-  const { setTheme, theme: currentTheme } = useTheme();
+export default function Topbar({ margin }: { margin?: boolean }) {
   const { data: session } = useSession();
+  const { setTheme, theme: currentTheme } = useTheme();
   const [themeOpen, setThemeOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
 
@@ -67,11 +68,12 @@ export default function Topbar() {
   return (
     <div
       className={cn(
-        "sticky top-0 z-10 h-13 -mb-13 flex flex-1 items-center px-4 py-1.5 transition-all duration-300",
-        scrolled ? "bg-sidebar" : "bg-transparent"
+        "sticky top-0 z-10 h-13 flex flex-1 items-center px-4 py-1.5 transition-all duration-300",
+        scrolled ? "bg-sidebar" : "bg-transparent",
+        !margin && "-mb-13"
       )}
     >
-      <SidebarButton />
+      {useIsMobile() && <SidebarButton />}
       <SearchInput />
       {userOpen && (
         <div

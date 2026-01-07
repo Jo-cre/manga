@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
       "lh3.googleusercontent.com",
       "blob.vercel-storage.com",
       "2coafa3enqgsaeie.public.blob.vercel-storage.com",
+      "uploads.mangadex.org",
     ],
   },
 };
