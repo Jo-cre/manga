@@ -10,6 +10,7 @@ export function useMangaSources() {
 
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     if (raw) {
       setEnabled(JSON.parse(raw));
     } else {

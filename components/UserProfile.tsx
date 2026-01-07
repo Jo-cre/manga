@@ -10,9 +10,10 @@ import BackButton from "@/components/BackButton";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
+import { userModel } from "@/lib/user/types";
 
 interface Props {
-  user: any;
+  user: userModel;
   isOwner: boolean;
   locale: string;
 }

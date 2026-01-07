@@ -12,20 +12,20 @@ export interface MangaSourceAdapter {
 export interface MangaSearchResult {
   id: string;
   title: string;
-  cover: string;
+  cover: string | null;
   adapterId: string;
 }
 
 export interface MangaDetails {
   id: string;
   title: string;
-  description?: string;
+  description?: string | null;
   cover: string | null;
 }
 
 export interface MangaChapter {
   id: string;
   title: string;
-  number?: string;
+  number?: string | null;
   sourceId: string;
 }
