@@ -8,7 +8,6 @@ import { Label } from "./ui/label";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "./ui/skeleton";
 import { MangaSearchResult } from "@/manga/types";
-import { searchMangas } from "@/manga/services/searchManga";
 import MangaButton from "./MangaButton";
 
 interface userData {

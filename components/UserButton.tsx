@@ -1,9 +1,10 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { Label } from "./ui/label";
 import { Badge } from "./ui/badge";
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface userData {
   id: string;
@@ -21,18 +22,11 @@ export default function UserButton({
   data: userData;
   className?: string;
 }) {
-  const { data: session } = useSession();
-
-  const route = session
-    ? session.user.id == data.id
-      ? "/user/me"
-      : `/user/${data.id}`
-    : `/user/${data.id}`;
-
+  const router = useRouter();
   return (
     <Button
       className={`${cn(className)} relative bg-accent hover:bg-muted h-13`}
-      onClick={() => (window.location.href = route)}
+      onClick={() => router.push(`/user/${data.id}`)}
     >
       <div className="relative rounded-full overflow-hidden w-10 h-10 mr-auto">
         <Image

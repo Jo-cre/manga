@@ -34,15 +34,16 @@ import Image from "next/image";
 import { Badge } from "./ui/badge";
 import { useTranslations } from "next-intl";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useRouter } from "next/navigation";
 
 export default function Topbar({ margin }: { margin?: boolean }) {
+  const t = useTranslations("TopBar.userPopover");
+  const router = useRouter();
+
   const { data: session } = useSession();
   const { setTheme, theme: currentTheme } = useTheme();
   const [themeOpen, setThemeOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
-
-  const t = useTranslations("TopBar.userPopover");
-
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -84,10 +85,10 @@ export default function Topbar({ margin }: { margin?: boolean }) {
       <Popover open={userOpen} onOpenChange={setUserOpen}>
         <PopoverTrigger asChild>
           <div
-            className="w-10 h-10 z-10 ml-auto mr-4 rounded-full hover:bg-muted/50 transition"
+            className="relative w-10 h-10 z-10 ml-auto mr-4 rounded-full hover:bg-muted/50 transition"
             onClick={() => {
               if (!session && window.location.pathname !== "/login") {
-                window.location.href = "/login";
+                router.push("/login");
               }
             }}
           >
@@ -95,9 +96,8 @@ export default function Topbar({ margin }: { margin?: boolean }) {
               <Image
                 src={session.user.image}
                 alt="User Avatar"
-                className="w-full h-full rounded-full"
-                width={40}
-                height={40}
+                fill
+                className="rounded-full object-cover"
               />
             ) : (
               <User className="w-full h-full rounded-full" />
@@ -117,7 +117,7 @@ export default function Topbar({ margin }: { margin?: boolean }) {
                 <Image
                   src={session.user.image}
                   alt="User Avatar"
-                  className="w-16 h-16 rounded-full"
+                  className="w-16 h-16 rounded-full object-cover"
                   width={96}
                   height={96}
                 />
@@ -145,21 +145,21 @@ export default function Topbar({ margin }: { margin?: boolean }) {
             <div className="w-full flex flex-col font-bold">
               <button
                 className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
-                onClick={() => (window.location.href = "/user/me")}
+                onClick={() => router.push(`/user/${session.user.id}`)}
               >
                 <User size={20} className="ml-3.5" />
                 <span className="mb-1 ml-[-2]">{t("profile")}</span>
               </button>
               <button
                 className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
-                onClick={() => (window.location.href = "/user/saved")}
+                onClick={() => router.push("/user/saved")}
               >
                 <Bookmark size={20} className="ml-3.5" />
                 <span className="mb-1 ml-[-2]">{t("saved")}</span>
               </button>
               <button
                 className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
-                onClick={() => (window.location.href = "/adapters")}
+                onClick={() => router.push("/adapters")}
               >
                 <ListPlus size={20} className="ml-3.5" />
                 <span className="mb-1 ml-[-2]">{t("adapters")}</span>
@@ -171,7 +171,7 @@ export default function Topbar({ margin }: { margin?: boolean }) {
               <div className="w-full flex flex-row gap-2">
                 <button
                   className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
-                  onClick={() => (window.location.href = "/settings")}
+                  onClick={() => router.push("/settings")}
                 >
                   <SettingsIcon size={20} className="ml-3.5" />
                   <span className="mb-1 ml-[-2]">{t("settings")}</span>

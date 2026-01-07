@@ -9,7 +9,7 @@ export const MangaDexAdapter: MangaSourceAdapter = {
     const res = await fetch(
       `https://api.mangadex.org/manga?title=${encodeURIComponent(
         query
-      )}&includes[]=cover_art`
+      )}&limit=5&includes[]=cover_art`
     );
     const json = await res.json();
 
