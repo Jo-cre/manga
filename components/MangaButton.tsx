@@ -20,7 +20,7 @@ export default function MangaButton({
     <div
       className={`${cn(
         className
-      )} relative flex flex-row bg-accent hover:bg-muted h-20 rounded-md`}
+      )} relative flex flex-row bg-muted hover:bg-muted-foreground/16 h-20 rounded-md`}
       onClick={() => router.push(`/manga/${data.id}`)}
     >
       {/* Capa */}

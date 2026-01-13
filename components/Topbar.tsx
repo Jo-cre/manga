@@ -17,7 +17,6 @@ import {
   LogOutIcon,
   PaintbrushIcon,
   Bookmark,
-  ListPlus,
 } from "lucide-react";
 import {
   Command,

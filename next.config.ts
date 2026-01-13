@@ -3,11 +3,23 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: [
-      "lh3.googleusercontent.com",
-      "blob.vercel-storage.com",
-      "2coafa3enqgsaeie.public.blob.vercel-storage.com",
-      "uploads.mangadex.org",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "blob.vercel-storage.com",
+      },
+      {
+        protocol: "https",
+        hostname: "2coafa3enqgsaeie.public.blob.vercel-storage.com",
+      },
+      {
+        protocol: "https",
+        hostname: "uploads.mangadex.org",
+      },
     ],
   },
 };

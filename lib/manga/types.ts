@@ -44,3 +44,52 @@ export interface MangaSearchResult {
   cover: string | null;
   status: string;
 }
+
+export interface Manga {
+  id: string;
+  type: "manga";
+  attributes: MangaAttributes;
+  relationships: MangaRelationship[];
+}
+
+export interface MangaAttributes {
+  title: LocalizedString;
+  altTitles: LocalizedString[];
+  description?: LocalizedString;
+
+  originalLanguage: string;
+  status: "ongoing" | "completed" | "hiatus" | "cancelled";
+  year?: number;
+  contentRating: "safe" | "suggestive" | "erotica" | "pornographic";
+
+  tags: Tag[];
+  links: LinkString;
+  availableTranslatedLanguages: string[];
+  latestUploadedChapter?: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LinkString {
+  [key: string]: string;
+}
+
+export interface LocalizedString {
+  [lang: string]: string;
+}
+
+export interface Tag {
+  id: string;
+  type: "tag";
+  attributes: {
+    name: LocalizedString;
+    group: "genre" | "theme" | "format";
+  };
+}
+
+export interface MangaRelationship {
+  id: string;
+  type: "author" | "artist" | "cover_art" | "manga";
+  related?: string;
+}
