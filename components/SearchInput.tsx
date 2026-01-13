@@ -7,28 +7,17 @@ import UserButton from "./UserButton";
 import { Label } from "./ui/label";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "./ui/skeleton";
-import { MangaSearchResult } from "@/manga/types";
+import { MangaSearchResult } from "@/lib/manga/types";
 import MangaButton from "./MangaButton";
-
-interface userData {
-  id: string;
-  name: string;
-  role: string;
-  image: string;
-  banner?: string;
-  createdAt?: Date;
-}
+import { userModel } from "@/lib/user/types";
 
 export default function SearchInput() {
   const [userOpen, setUserOpen] = useState(false);
   const [text, setText] = useState<string | null>(null);
   const [debounced, setDebounced] = useState(text);
-  const [userItems, setUserItems] = useState<userData[] | null>(null);
+  const [userItems, setUserItems] = useState<userModel[] | null>(null);
   const [mangaItems, setMangaItems] = useState<MangaSearchResult[] | null>(
     null
-  );
-  const enabledAdapters: string[] = JSON.parse(
-    localStorage.getItem("enabled-manga-sources") ?? "[]"
   );
 
   const [loading, setLoading] = useState(false);
@@ -62,11 +51,7 @@ export default function SearchInput() {
         setLoading(false);
       });
 
-    fetch(
-      `/api/manga?text=${encodeURIComponent(
-        debounced
-      )}&adapters=${enabledAdapters.join(",")}`
-    )
+    fetch(`/api/manga/search?text=${encodeURIComponent(debounced)}`)
       .then((res) => res.json())
       .then(setMangaItems)
 
