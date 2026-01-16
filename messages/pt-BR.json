@@ -3,7 +3,6 @@
     "userPopover": {
       "profile": "Perfil",
       "saved": "Salvos",
-      "adapters": "Adaptadores",
       "settings": "Opções",
       "theme": "Tema",
       "searchTheme": "Pesquisar",
@@ -32,5 +31,29 @@
   "Search": {
     "manga": "Mangas",
     "users": "Usuarios"
+  },
+
+  "Manga": {
+    "chapters": "Capítulos",
+    "noChapters": "Nenhum capítulo encontrado",
+    "description": "Descrição",
+    "languages": "Idiomas",
+    "noDescription": "Descrição indisponivel",
+    "expand": "Ver mais",
+    "collapse": "Ver menos",
+    "desc": "Novos primeiro",
+    "asc": "Antigos primeiro",
+    "none": "-",
+    "volume": "Volume",
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Próximo"
+    }
+  },
+
+  "Chapter": {
+    "chapter": "Capitulo",
+    "avaliable": "Disponivel",
+    "unavaliable": "Indisponivel"
   }
 }

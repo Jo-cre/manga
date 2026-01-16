@@ -93,3 +93,33 @@ export interface MangaRelationship {
   type: "author" | "artist" | "cover_art" | "manga";
   related?: string;
 }
+
+export interface MangaVolumesResponse {
+  result: "ok";
+  volumes: {
+    [volume: string]: MangaVolume;
+  };
+}
+
+export interface MangaVolume {
+  volume: string;
+  count: number;
+  chapters: {
+    [chapter: string]: MangaChapter;
+  };
+}
+
+export interface MangaChapter {
+  id: string;
+  type: "chapter";
+  attributes: {
+    chapter: string | null;
+    volume: string | null;
+    title: string | null;
+    isUnavailable: boolean;
+    translatedLanguage: string;
+    pages: number;
+    publishAt: string;
+    readableAt: string;
+  };
+}

@@ -1,14 +1,17 @@
 import { MangaDexListResponse, MangaDexManga } from "@/lib/manga/types";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { searchParams } = new URL(req.url);
+  const { id } = await params;
 
-  const text = searchParams.get("text");
   const limit = searchParams.get("limit");
 
   const res = await fetch(
-    `https://api.mangadex.org/manga?title=${encodeURIComponent(text ?? "")}
+    `https://api.mangadex.org/manga?title=${encodeURIComponent(id ?? "")}
     &limit=${encodeURIComponent(limit ?? "5")}&includes[]=cover_art`
   );
 

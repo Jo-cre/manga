@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Label } from "./ui/label";
+import { Label } from "../ui/label";
 import { useRouter } from "next/navigation";
-import { Tooltip, TooltipTrigger } from "./ui/tooltip";
-import { TooltipContent } from "./ui/tooltip";
-import { Badge } from "./ui/badge";
+import { Tooltip, TooltipTrigger } from "../ui/tooltip";
+import { TooltipContent } from "../ui/tooltip";
+import { Badge } from "../ui/badge";
 import { MangaSearchResult } from "@/lib/manga/types";
 
 export default function MangaButton({

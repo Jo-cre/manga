@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
-  const id = new URL(req.url).pathname.split("/").pop();
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
 
   if (!id) {
     return NextResponse.json(

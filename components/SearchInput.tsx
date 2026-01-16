@@ -8,7 +8,7 @@ import { Label } from "./ui/label";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "./ui/skeleton";
 import { MangaSearchResult } from "@/lib/manga/types";
-import MangaButton from "./MangaButton";
+import MangaButton from "./manga/MangaButton";
 import { userModel } from "@/lib/user/types";
 
 export default function SearchInput() {
@@ -51,7 +51,7 @@ export default function SearchInput() {
         setLoading(false);
       });
 
-    fetch(`/api/manga/search?text=${encodeURIComponent(debounced)}`)
+    fetch(`/api/manga/${encodeURIComponent(debounced)}/search`)
       .then((res) => res.json())
       .then(setMangaItems)
 
