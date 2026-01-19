@@ -8,7 +8,7 @@ export async function GET(
 
   if (!id) {
     return NextResponse.json(
-      { error: "Manga ID is required" },
+      { error: "Group ID is required" },
       { status: 400 },
     );
   }
@@ -20,7 +20,7 @@ export async function GET(
     })
     .catch(() =>
       NextResponse.json(
-        { error: "Failed to fetch manga data" },
+        { error: "Failed to fetch group data" },
         { status: 500 },
       ),
     );

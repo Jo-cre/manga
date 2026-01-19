@@ -1,7 +1,6 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import SidebarButton from "./SidebarButton";
 import {
   Popover,
   PopoverContent,
@@ -32,12 +31,19 @@ import SearchInput from "./SearchInput";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
 import { useTranslations } from "next-intl";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useRouter } from "next/navigation";
+import { useSidebar } from "./ui/sidebar";
 
-export default function Topbar({ margin }: { margin?: boolean }) {
+export default function Topbar({
+  margin,
+  fixed,
+}: {
+  margin?: boolean;
+  fixed?: boolean;
+}) {
   const t = useTranslations("TopBar.userPopover");
   const router = useRouter();
+  const { toggleSidebar } = useSidebar();
 
   const { data: session } = useSession();
   const { setTheme, theme: currentTheme } = useTheme();
@@ -68,12 +74,11 @@ export default function Topbar({ margin }: { margin?: boolean }) {
   return (
     <div
       className={cn(
-        "sticky top-0 z-10 h-13 flex flex-1 items-center px-4 py-1.5 transition-all duration-300",
+        `${fixed ? "" : "sticky"} top-0 z-10 h-13 flex flex-1 items-center px-4 py-1.5 transition-all duration-300`,
         scrolled ? "bg-sidebar" : "bg-transparent",
-        !margin && "-mb-13"
+        !margin && "-mb-13",
       )}
     >
-      {useIsMobile() && <SidebarButton />}
       <SearchInput />
       {userOpen && (
         <div
@@ -163,7 +168,10 @@ export default function Topbar({ margin }: { margin?: boolean }) {
               <div className="w-full flex flex-row gap-2">
                 <button
                   className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
-                  onClick={() => router.push("/settings")}
+                  onClick={() => {
+                    toggleSidebar();
+                    setUserOpen(false);
+                  }}
                 >
                   <SettingsIcon size={20} className="ml-3.5" />
                   <span className="mb-1 ml-[-2]">{t("settings")}</span>
@@ -199,7 +207,7 @@ export default function Topbar({ margin }: { margin?: boolean }) {
                                   "ml-auto",
                                   currentTheme === t.value
                                     ? "opacity-100"
-                                    : "opacity-0"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>

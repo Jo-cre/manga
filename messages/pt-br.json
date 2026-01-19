@@ -11,6 +11,10 @@
     }
   },
 
+  "Sidebar": {
+    "title": "Opções de leitura"
+  },
+
   "UserPage": {
     "name": "Nome",
     "email": "Email",

@@ -128,3 +128,12 @@ export interface MangaChapter {
     [x: string]: { id: string; type: "scanlation_group" | "manga" | "user" };
   };
 }
+
+export interface AtHomeResponse {
+  baseUrl: string;
+  chapter: {
+    hash: string;
+    data: string[];
+    dataSaver: string[];
+  };
+}
