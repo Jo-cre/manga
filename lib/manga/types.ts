@@ -89,9 +89,11 @@ export interface Tag {
 }
 
 export interface MangaRelationship {
-  id: string;
-  type: "author" | "artist" | "cover_art" | "manga";
-  related?: string;
+  [x: string]: {
+    id: string;
+    type: "author" | "artist" | "cover_art" | "manga";
+    related?: string;
+  };
 }
 
 export interface MangaVolumesResponse {
@@ -121,5 +123,8 @@ export interface MangaChapter {
     pages: number;
     publishAt: string;
     readableAt: string;
+  };
+  relationships: {
+    [x: string]: { id: string; type: "scanlation_group" | "manga" | "user" };
   };
 }

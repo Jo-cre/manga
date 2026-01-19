@@ -42,8 +42,10 @@
     "collapse": "See Less",
     "desc": "Ascending",
     "asc": "Descending",
+    "noneVolume": "Without volume",
     "none": "-",
     "volume": "Volume",
+    "loading": "Loading...",
     "pagination": {
       "previous": "Previous",
       "next": "Next"

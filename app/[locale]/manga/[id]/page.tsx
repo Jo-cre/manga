@@ -13,9 +13,11 @@ export default async function MangaPage({
 
   if (!data)
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col flex-1 min-h-screen">
         <Topbar />
-        <div>Not found</div>
+        <div className="min-h-screen flex flex-col items-center justify-center text-2xl">
+          Not found
+        </div>
       </div>
     );
 

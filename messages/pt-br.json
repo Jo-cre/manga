@@ -43,8 +43,10 @@
     "collapse": "Ver menos",
     "desc": "Novos primeiro",
     "asc": "Antigos primeiro",
+    "noneVolume": "Sem volume",
     "none": "-",
     "volume": "Volume",
+    "loading": "Carregando...",
     "pagination": {
       "previous": "Anterior",
       "next": "Próximo"

@@ -4,6 +4,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { Label } from "../ui/label";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { useEffect, useState } from "react";
+import { Group } from "@/lib/group/types";
+import { getGroup } from "@/lib/group/getGroup";
+import Link from "next/link";
+import { Skeleton } from "../ui/skeleton";
+import { useRouter } from "next/navigation";
 
 export default function ChapterButton({
   chapterData,
@@ -14,35 +21,95 @@ export default function ChapterButton({
 }) {
   const t = useTranslations("Chapter");
   const locale = useLocale();
+  const router = useRouter();
+
+  const [groups, setGroups] = useState<(Group | null)[] | null>(null);
+
+  const [skeletonWidths] = useState(() =>
+    Array.from({ length: 3 }, () => {
+      const widths = [16, 20, 24, 28];
+      return widths[Math.floor(Math.random() * widths.length)];
+    }),
+  );
+
+  useEffect(() => {
+    if (!chapterData?.relationships) return;
+    setTimeout(() => {
+      const fetchGroups = async () => {
+        const fGroups = Object.values(chapterData.relationships).filter(
+          (x) => x.type === "scanlation_group",
+        );
+
+        setGroups(await Promise.all(fGroups.map((g) => getGroup(g.id))));
+      };
+
+      fetchGroups();
+    }, 5000);
+  }, [chapterData]);
+
   return (
     <button
       className={cn(
         className,
-        "relative flex bg-background hover:bg-muted/16 h-20 px-8 py-2 border-t"
+        "relative flex bg-background hover:bg-muted/16 h-20 px-8 py-2 border-t cursor-pointer",
       )}
+      onClick={() => router.push(`/read/${chapterData.id}`)}
     >
       <div className="flex flex-1 flex-col">
-        <Label className="font-bold text-xl truncate block text-left">
-          {t("chapter")} {chapterData.attributes.chapter ?? "?"}
-          {chapterData.attributes.title && ` — ${chapterData.attributes.title}`}
-        </Label>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Label className="z-9 font-bold text-xl line-clamp-1 text-left">
+              {t("chapter")} {chapterData.attributes.chapter ?? "?"}
+              {chapterData.attributes.title &&
+                ` — ${chapterData.attributes.title}`}
+            </Label>
+          </TooltipTrigger>
+          <TooltipContent>
+            <Label>
+              {t("chapter")} {chapterData.attributes.chapter ?? "?"}
+              {chapterData.attributes.title &&
+                ` — ${chapterData.attributes.title}`}
+            </Label>
+          </TooltipContent>
+        </Tooltip>
 
         <div className="flex flex-1 flex-row p-2 gap-2">
-          <Badge
-            variant={`outline`}
-            className={`${
-              chapterData.attributes.isUnavailable
-                ? "border-red-800"
-                : "border-green-800"
-            } rounded-sm`}
-          >
-            {chapterData.attributes.isUnavailable
-              ? t("unavaliable")
-              : t("avaliable")}
-          </Badge>
-          <Badge variant={"outline"} className="rounded-sm">
-            {chapterData.attributes.translatedLanguage}
-          </Badge>
+          {groups === null ? (
+            <>
+              {skeletonWidths.map((w, i) => (
+                <Skeleton key={i} className={`h-6 w-${w} rounded-sm`} />
+              ))}
+            </>
+          ) : (
+            <>
+              <Badge
+                variant="outline"
+                className={`${
+                  chapterData.attributes.isUnavailable
+                    ? "border-red-800"
+                    : "border-green-800"
+                } rounded-sm`}
+              >
+                {chapterData.attributes.isUnavailable
+                  ? t("unavaliable")
+                  : t("avaliable")}
+              </Badge>
+              {groups.map(
+                (g) =>
+                  g && (
+                    <Badge variant="outline" key={g.id} className="rounded-sm">
+                      {g.attributes.website ? (
+                        <Link href={g.attributes.website}>
+                          {g.attributes.name}
+                        </Link>
+                      ) : (
+                        g.attributes.name
+                      )}
+                    </Badge>
+                  ),
+              )}
+            </>
+          )}
         </div>
       </div>
       <div>
@@ -55,9 +122,9 @@ export default function ChapterButton({
             height={40}
           />
         )}
-        <Label className="">
+        <Label>
           {new Date(chapterData.attributes.readableAt).toLocaleDateString(
-            locale
+            locale,
           )}
         </Label>
       </div>
