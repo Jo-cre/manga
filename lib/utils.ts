@@ -5,6 +5,20 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export interface Options {
+  orientation: "horizontal" | "vertical";
+  scroll: "bar" | "carousel";
+  size: "full" | "fit";
+  side: "left" | "right";
+}
+
+export const DEFAULT_OPTIONS: Options = {
+  orientation: "horizontal",
+  scroll: "carousel",
+  size: "fit",
+  side: "left",
+};
+
 export const getFlagByCode = (code: string): string | null => {
   const specialCases: Record<string, string> = {
     en: "gb",

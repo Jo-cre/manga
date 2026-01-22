@@ -5,6 +5,7 @@ import { ThemeProvider } from "./ThemeProvider";
 import { SidebarProvider } from "./ui/sidebar";
 import { Session } from "next-auth";
 import { NextIntlClientProvider } from "next-intl";
+import { OptionsProvider } from "./OptionsProvider";
 
 export function Providers({
   children,
@@ -27,10 +28,12 @@ export function Providers({
         themes={["light", "dark", "dracula", "nord", "solarized"]}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <SidebarProvider defaultOpen={false}>
-            <Sidebar />
-            {children}
-          </SidebarProvider>
+          <OptionsProvider>
+            <SidebarProvider defaultOpen={false}>
+              <Sidebar />
+              {children}
+            </SidebarProvider>
+          </OptionsProvider>
         </NextIntlClientProvider>
       </ThemeProvider>
     </SessionProvider>

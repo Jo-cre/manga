@@ -11,6 +11,14 @@
     }
   },
 
+  "Sidebar": {
+    "title": "Reading options",
+    "orientation": "Orientation",
+    "size": "Size",
+    "side": "Direction",
+    "scrollType": "Scroll type"
+  },
+
   "UserPage": {
     "name": "Name",
     "email": "Email",

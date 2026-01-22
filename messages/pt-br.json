@@ -12,7 +12,11 @@
   },
 
   "Sidebar": {
-    "title": "Opções de leitura"
+    "title": "Opções de leitura",
+    "orientation": "Orientação",
+    "size": "Tamanho",
+    "side": "Direção",
+    "scrollType": "Tipo de scroll"
   },
 
   "UserPage": {
