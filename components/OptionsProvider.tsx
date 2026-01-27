@@ -7,26 +7,27 @@ export function OptionsProvider({ children }: { children: React.ReactNode }) {
 
   const toggleOrientation = () => {
     setOptions((prev) => {
-      const newOrientation =
-        prev.orientation === "vertical" ? "horizontal" : "vertical";
+      const isNowVertical = prev.orientation === "horizontal";
 
       return {
         ...prev,
-        orientation: newOrientation,
-        size: newOrientation === "horizontal" ? "fit" : prev.size,
+        orientation: isNowVertical ? "vertical" : "horizontal",
+        side: isNowVertical ? "left" : prev.side,
+        size: !isNowVertical ? "fit" : prev.size,
       };
     });
   };
 
   const toggleSize = () => {
     setOptions((prev) => {
-      if (prev.orientation === "horizontal" || prev.scroll === "carousel") {
+      if (prev.orientation === "horizontal" || prev.scroll !== "bar")
         return prev;
-      }
+
+      const newSize = prev.size === "fit" ? "full" : "fit";
 
       return {
         ...prev,
-        size: prev.size === "fit" ? "full" : "fit",
+        size: newSize,
       };
     });
   };
@@ -46,9 +47,12 @@ export function OptionsProvider({ children }: { children: React.ReactNode }) {
 
   const toggleScrollType = () => {
     setOptions((prev) => {
+      const isNowCarousel = prev.scroll === "bar";
+
       return {
         ...prev,
-        scroll: prev.scroll === "bar" ? "carousel" : "bar",
+        scroll: isNowCarousel ? "carousel" : "bar",
+        size: isNowCarousel ? "fit" : prev.size,
       };
     });
   };

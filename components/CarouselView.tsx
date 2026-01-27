@@ -11,10 +11,12 @@ export default function CarouselView({
   pages,
   orientation,
   side,
+  cursor,
 }: {
   pages: string[];
   orientation: "horizontal" | "vertical";
   side: "left" | "right";
+  cursor: boolean;
 }) {
   const apiRef = useRef<CarouselApi | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -77,7 +79,8 @@ export default function CarouselView({
       <div
         ref={containerRef}
         tabIndex={0}
-        className="h-full flex flex-1 outline-none overflow-hidden focus:outline-none"
+        className={`h-full flex flex-1 outline-none overflow-hidden focus:outline-none 
+          ${cursor ? "cursor-default" : "cursor-none"}`}
       >
         <Carousel
           orientation={"horizontal"}
@@ -110,7 +113,8 @@ export default function CarouselView({
       <div
         ref={containerRef}
         tabIndex={0}
-        className="h-screen w-full outline-none overflow-hidden"
+        className={`h-screen w-full outline-none overflow-hidden
+          ${cursor ? "cursor-default" : "cursor-none"}`}
       >
         <Carousel
           orientation="vertical"

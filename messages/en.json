@@ -16,7 +16,8 @@
     "orientation": "Orientation",
     "size": "Size",
     "side": "Direction",
-    "scrollType": "Scroll type"
+    "scrollType": "Scroll type",
+    "numberOfPages": "Number of pages"
   },
 
   "UserPage": {

@@ -6,11 +6,13 @@ export default function ScrollView({
   orientation,
   size,
   side,
+  cursor,
 }: {
   pages: string[];
   orientation: "horizontal" | "vertical";
   size: "fit" | "full";
   side: "left" | "right";
+  cursor: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,7 +33,7 @@ export default function ScrollView({
         orientation === "vertical"
           ? "flex-col overflow-y-auto"
           : "flex-row overflow-x-auto"
-      }`}
+      } ${cursor ? "cursor-default" : "cursor-none"}`}
     >
       {pages.map((src, index) => (
         <Image

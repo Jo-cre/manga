@@ -10,6 +10,7 @@ export interface Options {
   scroll: "bar" | "carousel";
   size: "full" | "fit";
   side: "left" | "right";
+  pages: 1 | 2;
 }
 
 export const DEFAULT_OPTIONS: Options = {
@@ -17,6 +18,7 @@ export const DEFAULT_OPTIONS: Options = {
   scroll: "carousel",
   size: "fit",
   side: "left",
+  pages: 1,
 };
 
 export const getFlagByCode = (code: string): string | null => {

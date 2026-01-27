@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Plus,
+  LucideIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -63,14 +64,18 @@ export function Sidebar() {
   ];
 
   function getIcon(opt: string) {
-    if (opt === "horizontal" || opt === "vertical")
-      return opt === "horizontal" ? GalleryHorizontal : GalleryVertical;
-    if (opt === "fit" || opt === "full") return opt === "fit" ? Shrink : Expand;
-    if (opt === "bar" || opt === "carousel")
-      return opt === "bar" ? Mouse : GalleryThumbnails;
-    if (opt === "left" || opt === "right")
-      return opt === "left" ? ArrowRight : ArrowLeft;
-    return Plus;
+    const iconMap: Record<string, LucideIcon> = {
+      horizontal: GalleryHorizontal,
+      vertical: GalleryVertical,
+      fit: Shrink,
+      full: Expand,
+      bar: Mouse,
+      carousel: GalleryThumbnails,
+      left: ArrowRight,
+      right: ArrowLeft,
+    };
+
+    return iconMap[opt] || Plus;
   }
 
   return (
