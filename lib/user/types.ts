@@ -7,3 +7,13 @@ export interface userModel {
   role: string;
   createdAt: Date;
 }
+
+export interface readingProgress {
+  progress: {
+    userId: string;
+    mangaId: string;
+    chapterNum: number;
+    updatedAt: Date;
+  };
+  action: "selected" | "upsert";
+}

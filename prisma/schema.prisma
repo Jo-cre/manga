@@ -33,44 +33,8 @@ model User {
   banner    String?  @default("")
   role      Role    @default(USER)
   createdAt DateTime @default(now())
-  userSources   UserSource[]
   library       LibraryManga[]
   reading       ReadingProgress[]
-}
-
-//////////////////////
-// SOURCE (GLOBAL)
-//////////////////////
-
-model Source {
-  id        String   @id @default(cuid())
-  name      String
-  adapterId String   @unique
-  baseUrl   String
-  enabled   Boolean  @default(true)
-  createdAt DateTime @default(now())
-
-  // Relations
-  users     UserSource[]
-  library   LibraryManga[]
-  reading   ReadingProgress[]
-}
-
-//////////////////////
-// USER <-> SOURCE
-//////////////////////
-
-model UserSource {
-  id        String   @id @default(cuid())
-  userId    String
-  sourceId  String
-  enabled   Boolean  @default(true)
-  addedAt   DateTime @default(now())
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, sourceId])
 }
 
 //////////////////////
@@ -78,15 +42,11 @@ model UserSource {
 //////////////////////
 
 model LibraryManga {
-  id              String   @id @default(cuid())
-  userId          String
-  sourceId        String
-  externalMangaId String
+  userId  String
+  mangaId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, sourceId, externalMangaId])
+  @@id([userId])
 }
 
 //////////////////////
@@ -94,16 +54,12 @@ model LibraryManga {
 //////////////////////
 
 model ReadingProgress {
-  id                String   @id @default(cuid())
-  userId            String
-  sourceId          String
-  externalMangaId   String
-  externalChapterId String
-  lastPage          Int?
-  updatedAt         DateTime @updatedAt
+  userId     String
+  mangaId    String
+  chapterNum Int   @default(0)
+  updatedAt  DateTime @updatedAt
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, sourceId, externalMangaId, externalChapterId])
+  @@id([userId, mangaId])
 }

@@ -17,6 +17,9 @@ import { Button } from "../ui/button";
 import ChapterButton from "./ChapterButton";
 import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
+import { readingProgress } from "@/lib/user/types";
+import { getProgress } from "@/lib/user/progress";
+import { useSession } from "next-auth/react";
 
 export default function MangaVolumes({
   id,
@@ -26,12 +29,16 @@ export default function MangaVolumes({
   lang: string;
 }) {
   const t = useTranslations("Manga");
+  const { data: session } = useSession();
 
   const [data, setData] = useState<MangaVolumesResponse | null>(null);
   const [sort, setSort] = useState<"asc" | "desc">("desc");
   const [volume, setVolume] = useState<MangaVolume | null>(null);
   const [chapters, setChapters] = useState<MangaChapter[] | null>(null);
   const [chaptersLoading, setChaptersLoading] = useState(false);
+
+  const [readingProgress, setReadingProgress] =
+    useState<readingProgress | null>(null);
 
   useEffect(() => {
     fetch(`/api/manga/${id}/volumes?lang=${lang}`, {
@@ -56,6 +63,17 @@ export default function MangaVolumes({
         setVolume(lastNumeric);
       });
   }, [id, lang]);
+
+  useEffect(() => {
+    if (!session?.user?.id || !id) return;
+
+    const fetchProgress = async () => {
+      const data = await getProgress(session.user.id, id);
+      setReadingProgress(data);
+    };
+
+    fetchProgress();
+  }, [id, session?.user?.id]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -152,7 +170,26 @@ export default function MangaVolumes({
 
                     return Number(ca) - Number(cb);
                   })
-                  .map((c) => <ChapterButton chapterData={c} key={c.id} />)
+                  .map((c) => {
+                    if (!session)
+                      return (
+                        <ChapterButton manga={id} chapterData={c} key={c.id} />
+                      );
+
+                    const currentChapter = Number(c.attributes.chapter);
+                    const isRead = readingProgress
+                      ? currentChapter <= readingProgress.progress.chapterNum
+                      : false;
+
+                    return (
+                      <ChapterButton
+                        manga={id}
+                        chapterData={c}
+                        key={c.id}
+                        read={isRead}
+                      />
+                    );
+                  })
               ) : (
                 <p className="text-muted-foreground p-4">{t("noChapters")}</p>
               )}

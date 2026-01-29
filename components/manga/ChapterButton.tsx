@@ -1,3 +1,4 @@
+"use client";
 import { MangaChapter } from "@/lib/manga/types";
 import { cn, getFlagByCode } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
@@ -11,15 +12,24 @@ import { getGroup } from "@/lib/group/getGroup";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
+import { setProgress } from "@/lib/user/progress";
+import { useSession } from "next-auth/react";
 
 export default function ChapterButton({
+  read,
+  manga,
   chapterData,
   className,
 }: {
+  read?: boolean;
+  manga: string;
   chapterData: MangaChapter;
   className?: string;
 }) {
   const t = useTranslations("Chapter");
+  const { data: session } = useSession();
+
   const locale = useLocale();
   const router = useRouter();
 
@@ -53,7 +63,16 @@ export default function ChapterButton({
         className,
         "relative flex bg-background hover:bg-muted/16 h-20 px-8 py-2 border-t cursor-pointer",
       )}
-      onClick={() => router.push(`/read/${chapterData.id}`)}
+      onClick={() => {
+        if (session && manga && chapterData.attributes.chapter) {
+          setProgress(
+            session.user.id,
+            manga,
+            Number(chapterData.attributes.chapter),
+          );
+        }
+        router.push(`/read/${chapterData.id}`);
+      }}
     >
       <div className="flex flex-1 flex-col">
         <Tooltip>
@@ -112,6 +131,7 @@ export default function ChapterButton({
           )}
         </div>
       </div>
+      <div className="pt-1">{read ? <Eye /> : <EyeOff />}</div>
       <div>
         {getFlagByCode(chapterData.attributes.translatedLanguage) != null && (
           <Image
