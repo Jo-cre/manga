@@ -109,7 +109,7 @@ export default function UserProfile({ user, isOwner, locale }: Props) {
   return (
     <div className="flex flex-1 justify-center px-10 py-20">
       <Card className="relative w-full max-w-5xl overflow-hidden py-0">
-        <BackButton className="absolute top-0 left-0 z-10 rounded-br-lg bg-muted/50" />
+        <BackButton className="absolute top-0 left-0 z-9 rounded-br-lg bg-muted/50" />
 
         {/* Banner */}
         <div
