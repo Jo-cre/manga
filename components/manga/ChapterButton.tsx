@@ -69,6 +69,7 @@ export default function ChapterButton({
             session.user.id,
             manga,
             Number(chapterData.attributes.chapter),
+            chapterData.id,
           );
         }
         router.push(`/read/${chapterData.id}`);

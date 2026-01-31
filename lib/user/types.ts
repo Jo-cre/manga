@@ -11,6 +11,7 @@ export interface userModel {
 export interface readingProgress {
   userId: string;
   mangaId: string;
+  chapterId: string;
   chapterNum: number;
   updatedAt: Date;
 }

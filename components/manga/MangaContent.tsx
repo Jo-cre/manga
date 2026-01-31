@@ -10,13 +10,14 @@ import { Button } from "../ui/button";
 import { ArrowUp, BookmarkCheck, BookmarkPlus, Download } from "lucide-react";
 import MangaVolumes from "./MangaVolumes";
 import { readingProgress } from "@/lib/user/types";
-import { getProgress } from "@/lib/user/progress";
+import { getProgress, setProgress } from "@/lib/user/progress";
 import { useSession } from "next-auth/react";
 import {
   addToLibrary,
   checkInLibrary,
   removeFromLibrary,
 } from "@/lib/user/library";
+import { useRouter } from "next/navigation";
 
 export function MangaContent({
   data,
@@ -27,6 +28,7 @@ export function MangaContent({
 }) {
   const t = useTranslations("Manga");
   const { data: session } = useSession();
+  const router = useRouter();
 
   const [currentLang, setCurrentLang] = useState(locale);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -81,6 +83,37 @@ export function MangaContent({
     fetchProgress();
   }, [data.id, session?.user?.id]);
 
+  function readButton() {
+    const handler = async () => {
+      if (readingProgress) {
+        router.push(`/read/${readingProgress.chapterId}`);
+      } else {
+        const res = await fetch(
+          `/api/manga/${data.id}/chapter/first?lang=${currentLang}`,
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch first chapter");
+        }
+
+        const firstChapter: {
+          chapterId: string | null;
+          chapter: number | null;
+        } = await res.json();
+        if (session && firstChapter.chapterId) {
+          setProgress(
+            session.user.id,
+            data.id,
+            Number(firstChapter.chapter),
+            firstChapter.chapterId,
+          );
+          router.push(`/read/${firstChapter.chapterId}`);
+        }
+      }
+    };
+    handler();
+  }
+
   return (
     <>
       <div className="relative h-[90vh] w-full flex items-center justify-center">
@@ -103,6 +136,7 @@ export function MangaContent({
           <Button
             variant={"default"}
             className="bg-primary/75 min-w-26.5 h-11.5 px-8 text-2xl font-bold"
+            onClick={() => readButton()}
           >
             {t(readingProgress ? "continue" : "read")}
           </Button>

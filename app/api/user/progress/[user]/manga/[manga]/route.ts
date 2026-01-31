@@ -48,11 +48,12 @@ export async function POST(
   try {
     const { user, manga } = await params;
     const body = await req.json();
-    const { chapter } = body;
 
-    if (!user || !manga || chapter == null) {
+    const { chapter, chapterId } = body;
+
+    if (!user || !manga || (!chapter && !chapterId)) {
       return NextResponse.json(
-        { error: "User, Manga ID and chapter are required" },
+        { error: "User, Manga ID and chapter or chapterId are required" },
         { status: 400 },
       );
     }
@@ -76,12 +77,14 @@ export async function POST(
         },
       },
       update: {
-        chapterNum: Number(chapter),
+        chapterNum: chapter != null ? Number(chapter) : undefined,
+        chapterId: chapterId ?? undefined,
       },
       create: {
         userId: user,
         mangaId: manga,
-        chapterNum: Number(chapter),
+        chapterNum: chapter != null ? Number(chapter) : undefined,
+        chapterId: chapterId ?? null,
       },
     });
 

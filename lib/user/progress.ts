@@ -16,14 +16,22 @@ export async function getProgress(
 export async function setProgress(
   user: string,
   manga: string,
-  chapter: string | number,
+  chapter?: string | number,
+  chapterId?: string,
 ) {
+  if (chapter == null && !chapterId) {
+    throw new Error("chapter or chapterId is required");
+  }
+
   const res = await fetch(
     `${process.env.API_URL}/api/user/progress/${user}/manga/${manga}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chapter: chapter }),
+      body: JSON.stringify({
+        chapter: chapter != null ? Number(chapter) : undefined,
+        chapterId,
+      }),
     },
   );
 

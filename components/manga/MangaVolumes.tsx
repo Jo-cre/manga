@@ -83,42 +83,44 @@ export default function MangaVolumes({
     <div>
       <Pagination className="w-full">
         <PaginationContent className="flex w-4/5 flex-col">
-          <Button
-            className="sticky top-16 mr-auto ml-6"
-            variant={"outline"}
-            onClick={() => {
-              if (!data || !volume) {
-                setSort(sort === "asc" ? "desc" : "asc");
-                return;
-              }
+          {chapters && (
+            <Button
+              className="sticky top-16 mr-auto ml-6"
+              variant={"outline"}
+              onClick={() => {
+                if (!data || !volume) {
+                  setSort(sort === "asc" ? "desc" : "asc");
+                  return;
+                }
 
-              const newSort = sort === "asc" ? "desc" : "asc";
-              const volumes = Object.values(data.volumes);
+                const newSort = sort === "asc" ? "desc" : "asc";
+                const volumes = Object.values(data.volumes);
 
-              const noneVolume =
-                volumes.find((v) => v.volume === "none") ?? null;
-              const firstVolume =
-                volumes
-                  .filter((v) => v.volume !== "none")
-                  .sort(
-                    (a, b) => parseFloat(a.volume) - parseFloat(b.volume),
-                  )[0] ?? null;
+                const noneVolume =
+                  volumes.find((v) => v.volume === "none") ?? null;
+                const firstVolume =
+                  volumes
+                    .filter((v) => v.volume !== "none")
+                    .sort(
+                      (a, b) => parseFloat(a.volume) - parseFloat(b.volume),
+                    )[0] ?? null;
 
-              if (volume.volume === "none" && firstVolume) {
-                setVolume(firstVolume);
-              } else if (
-                firstVolume &&
-                volume.volume === firstVolume.volume &&
-                noneVolume
-              ) {
-                setVolume(noneVolume);
-              }
+                if (volume.volume === "none" && firstVolume) {
+                  setVolume(firstVolume);
+                } else if (
+                  firstVolume &&
+                  volume.volume === firstVolume.volume &&
+                  noneVolume
+                ) {
+                  setVolume(noneVolume);
+                }
 
-              setSort(newSort);
-            }}
-          >
-            {t(sort)}
-          </Button>
+                setSort(newSort);
+              }}
+            >
+              {t(sort)}
+            </Button>
+          )}
 
           <div className="w-3/4 rounded-md overflow-hidden flex flex-col">
             {data && volume && (
