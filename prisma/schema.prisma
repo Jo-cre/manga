@@ -33,7 +33,7 @@ model User {
   banner    String?  @default("")
   role      Role    @default(USER)
   createdAt DateTime @default(now())
-  library       LibraryManga[]
+  library       Library[]
   reading       ReadingProgress[]
 }
 
@@ -41,12 +41,12 @@ model User {
 // LIBRARY (BOOKMARK)
 //////////////////////
 
-model LibraryManga {
+model Library {
   userId  String
   mangaId String
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([userId])
+  @@id([userId, mangaId])
 }
 
 //////////////////////

@@ -17,16 +17,16 @@ import { Button } from "../ui/button";
 import ChapterButton from "./ChapterButton";
 import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
-import { readingProgress } from "@/lib/user/types";
-import { getProgress } from "@/lib/user/progress";
 import { useSession } from "next-auth/react";
 
 export default function MangaVolumes({
   id,
   lang,
+  progress,
 }: {
   id: string;
   lang: string;
+  progress?: number;
 }) {
   const t = useTranslations("Manga");
   const { data: session } = useSession();
@@ -36,9 +36,6 @@ export default function MangaVolumes({
   const [volume, setVolume] = useState<MangaVolume | null>(null);
   const [chapters, setChapters] = useState<MangaChapter[] | null>(null);
   const [chaptersLoading, setChaptersLoading] = useState(false);
-
-  const [readingProgress, setReadingProgress] =
-    useState<readingProgress | null>(null);
 
   useEffect(() => {
     fetch(`/api/manga/${id}/volumes?lang=${lang}`, {
@@ -63,17 +60,6 @@ export default function MangaVolumes({
         setVolume(lastNumeric);
       });
   }, [id, lang]);
-
-  useEffect(() => {
-    if (!session?.user?.id || !id) return;
-
-    const fetchProgress = async () => {
-      const data = await getProgress(session.user.id, id);
-      setReadingProgress(data);
-    };
-
-    fetchProgress();
-  }, [id, session?.user?.id]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -134,9 +120,9 @@ export default function MangaVolumes({
             {t(sort)}
           </Button>
 
-          <div className="w-2/3 rounded-md overflow-hidden flex flex-col border">
+          <div className="w-3/4 rounded-md overflow-hidden flex flex-col">
             {data && volume && (
-              <Label className="font-bold text-3xl truncate block text-left p-4">
+              <Label className="font-bold text-3xl truncate block text-left p-4 px-10">
                 {volume.volume === "none"
                   ? t("noneVolume")
                   : t("volume") + " " + volume.volume}
@@ -144,7 +130,7 @@ export default function MangaVolumes({
             )}
 
             <div
-              className={`w-full h-full flex ${
+              className={`w-full h-full flex items-center ${
                 sort === "asc" ? "flex-col" : "flex-col-reverse"
               }`}
             >
@@ -177,8 +163,8 @@ export default function MangaVolumes({
                       );
 
                     const currentChapter = Number(c.attributes.chapter);
-                    const isRead = readingProgress
-                      ? currentChapter <= readingProgress.progress.chapterNum
+                    const isRead = progress
+                      ? currentChapter <= Number(progress)
                       : false;
 
                     return (

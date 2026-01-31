@@ -79,7 +79,7 @@ export function Sidebar() {
   }
 
   return (
-    <SideBar>
+    <SideBar className="border-none">
       <SidebarHeader>
         <div className="flex items-center justify-center flex-row px-2">
           <h1 className="text-xl ml-auto font-bold">{t("title")}</h1>

@@ -9,11 +9,13 @@ export interface userModel {
 }
 
 export interface readingProgress {
-  progress: {
-    userId: string;
-    mangaId: string;
-    chapterNum: number;
-    updatedAt: Date;
-  };
-  action: "selected" | "upsert";
+  userId: string;
+  mangaId: string;
+  chapterNum: number;
+  updatedAt: Date;
+}
+
+export interface Library {
+  userId: string;
+  mangaId: string;
 }

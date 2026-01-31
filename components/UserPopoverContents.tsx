@@ -95,10 +95,10 @@ export function UserPopover() {
         </button>
         <button
           className="flex-1 outline-none bg-transparent border-none flex flex-row gap-2 items-center justify-start hover:bg-muted/50 rounded-md p-2 transition"
-          onClick={() => router.push("/user/saved")}
+          onClick={() => router.push("/user/library")}
         >
           <Bookmark size={20} className="ml-3.5" />
-          <span className="mb-1 ml-[-2]">{t("saved")}</span>
+          <span className="mb-1 ml-[-2]">{t("library")}</span>
         </button>
       </div>
       <Separator className="my-3 w-full" />

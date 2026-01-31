@@ -6,8 +6,6 @@ export async function GET(
   { params }: { params: Promise<{ user: string; manga: string }> },
 ) {
   try {
-    const { searchParams } = new URL(req.url);
-    const chapter = searchParams.get("chapter");
     const { user, manga } = await params;
 
     if (!user || !manga) {
@@ -17,7 +15,52 @@ export async function GET(
       );
     }
 
-    const userExist = await prisma.user.findUnique({ where: { id: user } });
+    const progress = await prisma.readingProgress.findUnique({
+      where: {
+        userId_mangaId: {
+          userId: user,
+          mangaId: manga,
+        },
+      },
+    });
+
+    if (!progress) {
+      return NextResponse.json(
+        { message: "No progress found" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(progress);
+  } catch (error) {
+    console.error("Database Error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function POST(
+  req: Request,
+  { params }: { params: Promise<{ user: string; manga: string }> },
+) {
+  try {
+    const { user, manga } = await params;
+    const body = await req.json();
+    const { chapter } = body;
+
+    if (!user || !manga || chapter == null) {
+      return NextResponse.json(
+        { error: "User, Manga ID and chapter are required" },
+        { status: 400 },
+      );
+    }
+
+    const userExist = await prisma.user.findUnique({
+      where: { id: user },
+    });
+
     if (!userExist) {
       return NextResponse.json(
         { error: "User does not exist" },
@@ -25,39 +68,24 @@ export async function GET(
       );
     }
 
-    const uniqueFilter = {
-      userId_mangaId: {
-        userId: user,
-        mangaId: manga,
-      },
-    };
-
-    if (chapter) {
-      const progress = await prisma.readingProgress.upsert({
-        where: uniqueFilter,
-        update: { chapterNum: Number(chapter) },
-        create: {
+    const progress = await prisma.readingProgress.upsert({
+      where: {
+        userId_mangaId: {
           userId: user,
           mangaId: manga,
-          chapterNum: Number(chapter),
         },
-      });
+      },
+      update: {
+        chapterNum: Number(chapter),
+      },
+      create: {
+        userId: user,
+        mangaId: manga,
+        chapterNum: Number(chapter),
+      },
+    });
 
-      return NextResponse.json({ progress, action: "upserted" });
-    } else {
-      const progress = await prisma.readingProgress.findUnique({
-        where: uniqueFilter,
-      });
-
-      if (!progress) {
-        return NextResponse.json(
-          { message: "No progress found" },
-          { status: 404 },
-        );
-      }
-
-      return NextResponse.json({ progress, action: "selected" });
-    }
+    return NextResponse.json(progress, { status: 201 });
   } catch (error) {
     console.error("Database Error:", error);
     return NextResponse.json(

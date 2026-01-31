@@ -17,7 +17,7 @@ export default function SearchInput() {
   const [debounced, setDebounced] = useState(text);
   const [userItems, setUserItems] = useState<userModel[] | null>(null);
   const [mangaItems, setMangaItems] = useState<MangaSearchResult[] | null>(
-    null
+    null,
   );
 
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ export default function SearchInput() {
         setLoading(false);
       });
 
-    fetch(`/api/manga/${encodeURIComponent(debounced)}/search`)
+    fetch(`/api/manga/${encodeURIComponent(debounced)}/search?text=true`)
       .then((res) => res.json())
       .then(setMangaItems)
 

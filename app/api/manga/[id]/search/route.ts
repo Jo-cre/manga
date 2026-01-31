@@ -1,43 +1,69 @@
-import { MangaDexListResponse, MangaDexManga } from "@/lib/manga/types";
+import {
+  MangaDexListResponse,
+  MangaDexManga,
+  MangaDexSingleResponse,
+} from "@/lib/manga/types";
 import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const { searchParams } = new URL(req.url);
-  const { id } = await params;
+  try {
+    const { searchParams } = new URL(req.url);
+    const { id } = await params;
 
-  const limit = searchParams.get("limit");
+    const limit = searchParams.get("limit") ?? "5";
+    const isSearchByText = searchParams.get("text") === "true";
 
-  const res = await fetch(
-    `https://api.mangadex.org/manga?title=${encodeURIComponent(id ?? "")}
-    &limit=${encodeURIComponent(limit ?? "5")}&includes[]=cover_art`
-  );
+    const baseUrl = "https://api.mangadex.org/manga";
 
-  const json: MangaDexListResponse<MangaDexManga> = await res.json();
+    const url = isSearchByText
+      ? `${baseUrl}?title=${encodeURIComponent(id)}&limit=${limit}&includes[]=cover_art`
+      : `${baseUrl}/${id}?includes[]=cover_art`;
 
-  const data = json.data.map((m) => {
-    const coverRel = m.relationships.find((r) => r.type === "cover_art");
+    const res = await fetch(url);
 
-    const fileName = coverRel?.attributes?.fileName;
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: "Failed to fetch from MangaDex" },
+        { status: res.status },
+      );
+    }
 
-    return {
-      id: m.id,
-      title:
-        m.attributes.title.en ??
-        m.attributes.title["ja-ro"] ??
-        m.attributes.altTitles.find((t) => t["ja-ro"])?.["ja-ro"] ??
-        m.attributes.altTitles.find((t) => t.en)?.en ??
-        "No Title avaliable",
+    const json = await res.json();
 
-      cover: fileName
-        ? `https://uploads.mangadex.org/covers/${m.id}/${fileName}.256.jpg`
-        : null,
+    const rawData = isSearchByText
+      ? (json as MangaDexListResponse<MangaDexManga>).data
+      : [(json as MangaDexSingleResponse<MangaDexManga>).data];
 
-      status: m.attributes.status,
-    };
-  });
+    const data = rawData.map((m) => {
+      const coverRel = m.relationships.find((r) => r.type === "cover_art");
+      const fileName = coverRel?.attributes?.fileName;
 
-  return NextResponse.json(data);
+      return {
+        id: m.id,
+        title:
+          m.attributes.title.en ??
+          m.attributes.title["ja-ro"] ??
+          m.attributes.altTitles.find((t) => t["ja-ro"])?.["ja-ro"] ??
+          m.attributes.altTitles.find((t) => t.en)?.en ??
+          "No Title available",
+
+        cover: fileName
+          ? `https://uploads.mangadex.org/covers/${m.id}/${fileName}.256.jpg`
+          : null,
+
+        status: m.attributes.status,
+      };
+    });
+
+    return NextResponse.json(isSearchByText ? data : data[0]);
+  } catch (error) {
+    console.error("MANGADEX_ROUTE_ERROR:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
 }

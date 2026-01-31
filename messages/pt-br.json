@@ -2,7 +2,7 @@
   "TopBar": {
     "userPopover": {
       "profile": "Perfil",
-      "saved": "Salvos",
+      "library": "Biblioteca",
       "settings": "Opções",
       "theme": "Tema",
       "searchTheme": "Pesquisar",
@@ -44,6 +44,8 @@
   },
 
   "Manga": {
+    "continue": "Retomar",
+    "read": "Ler",
     "chapters": "Capítulos",
     "noChapters": "Nenhum capítulo encontrado",
     "description": "Descrição",

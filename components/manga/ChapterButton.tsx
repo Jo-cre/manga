@@ -61,7 +61,7 @@ export default function ChapterButton({
     <button
       className={cn(
         className,
-        "relative flex bg-background hover:bg-muted/16 h-20 px-8 py-2 border-t cursor-pointer",
+        "relative flex bg-background hover:bg-muted/16 w-9/10 h-20 hover:my-0.5 hover:z-2 hover:border hover:rounded-sm px-8 py-2 cursor-pointer hover:scale-105 transition-all duration-300",
       )}
       onClick={() => {
         if (session && manga && chapterData.attributes.chapter) {
