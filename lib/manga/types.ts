@@ -124,9 +124,12 @@ export interface MangaChapter {
     publishAt: string;
     readableAt: string;
   };
-  relationships: {
-    [x: string]: { id: string; type: "scanlation_group" | "manga" | "user" };
-  };
+  relationships: ChapterRelationship[];
+}
+
+export interface ChapterRelationship {
+  id: string;
+  type: "scanlation_group" | "manga" | "user";
 }
 
 export interface AtHomeResponse {
@@ -137,3 +140,20 @@ export interface AtHomeResponse {
     dataSaver: string[];
   };
 }
+
+export interface MangaFeedResponse {
+  data: MangaChapter[];
+}
+
+export type ChapterNavResponse =
+  | {
+      type: "chapter";
+      id: string;
+      chapter: string | null;
+      volume: string | null;
+      group: string | null;
+    }
+  | {
+      type: "manga";
+      mangaId: string;
+    };
