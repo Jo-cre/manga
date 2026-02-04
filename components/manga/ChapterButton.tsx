@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { setProgress } from "@/lib/user/progress";
 import { useSession } from "next-auth/react";
+import { setChapterCache } from "@/lib/manga/chapterCache";
 
 export default function ChapterButton({
   read,
@@ -72,6 +73,7 @@ export default function ChapterButton({
             chapterData.id,
           );
         }
+        setChapterCache(chapterData);
         router.push(`/read/${chapterData.id}`);
       }}
     >

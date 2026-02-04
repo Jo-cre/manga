@@ -13,12 +13,10 @@ import { userModel } from "@/lib/user/types";
 
 export default function SearchInput() {
   const [userOpen, setUserOpen] = useState(false);
-  const [text, setText] = useState<string | null>(null);
-  const [debounced, setDebounced] = useState(text);
-  const [userItems, setUserItems] = useState<userModel[] | null>(null);
-  const [mangaItems, setMangaItems] = useState<MangaSearchResult[] | null>(
-    null,
-  );
+  const [text, setText] = useState<string>("");
+  const [debounced, setDebounced] = useState<string>("");
+  const [userItems, setUserItems] = useState<userModel[]>([]);
+  const [mangaItems, setMangaItems] = useState<MangaSearchResult[]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -34,11 +32,11 @@ export default function SearchInput() {
     };
   }, [text]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!debounced || debounced.length < 2) {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      setMangaItems((prev) => (prev && prev.length ? null : prev));
-      setUserItems((prev) => (prev && prev.length ? null : prev));
+      setMangaItems([]);
+      setUserItems([]);
       return;
     }
     setLoading(true);
@@ -46,7 +44,6 @@ export default function SearchInput() {
     fetch(`/api/user?text=${encodeURIComponent(debounced)}`)
       .then((res) => res.json())
       .then(setUserItems)
-
       .finally(() => {
         setLoading(false);
       });
@@ -54,7 +51,6 @@ export default function SearchInput() {
     fetch(`/api/manga/${encodeURIComponent(debounced)}/search?text=true`)
       .then((res) => res.json())
       .then(setMangaItems)
-
       .finally(() => {
         setLoading(false);
       });
@@ -77,6 +73,7 @@ export default function SearchInput() {
         >
           <input
             type="text"
+            value={text}
             className="w-full border-none outline-none px-3 py-1 bg-transparent"
             onChange={(e) => setText(e.target.value)}
             onFocus={() => setUserOpen(true)}
@@ -101,20 +98,24 @@ export default function SearchInput() {
                 </div>
               </div>
             )}
-            {mangaItems && mangaItems.length > 0 && (
-              <Label className="font-bold text-2xl">{t("manga")}</Label>
+
+            {mangaItems.length > 0 && (
+              <>
+                <Label className="font-bold text-2xl">{t("manga")}</Label>
+                {mangaItems.map((item) => (
+                  <MangaButton data={item} key={item.id} />
+                ))}
+              </>
             )}
-            {mangaItems &&
-              mangaItems.map((item, i) => (
-                <MangaButton data={item} key={i + "_" + item} />
-              ))}
-            {userItems && userItems.length > 0 && (
-              <Label className="font-bold text-2xl">{t("users")}</Label>
+
+            {userItems.length > 0 && (
+              <>
+                <Label className="font-bold text-2xl">{t("users")}</Label>
+                {userItems.map((item) => (
+                  <UserButton data={item} key={item.id} />
+                ))}
+              </>
             )}
-            {userItems &&
-              userItems.map((item, i) => (
-                <UserButton data={item} key={i + "_" + item} />
-              ))}
           </Card>
         </PopoverContent>
       </Popover>

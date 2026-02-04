@@ -5,25 +5,27 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function CarouselView({
   pages,
   orientation,
   side,
   cursor,
+  action,
 }: {
   pages: string[];
   orientation: "horizontal" | "vertical";
   side: "left" | "right";
   cursor: boolean;
+  action: (action: "prev" | "next") => void;
 }) {
-  const apiRef = useRef<CarouselApi | null>(null);
+  const [api, setApi] = useState<CarouselApi | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (!apiRef.current) return;
+      if (!api) return;
 
       const isNext =
         orientation === "horizontal"
@@ -37,36 +39,63 @@ export default function CarouselView({
 
       if (isNext) {
         e.preventDefault();
-        apiRef.current.scrollNext();
+
+        if (api.canScrollNext()) {
+          api.scrollNext();
+        } else {
+          action(side === "left" ? "next" : "prev");
+        }
       }
 
       if (isPrev) {
         e.preventDefault();
-        apiRef.current.scrollPrev();
+
+        if (api.canScrollPrev()) {
+          api.scrollPrev();
+        } else {
+          action(side === "left" ? "prev" : "next");
+        }
       }
     },
-    [orientation],
+    [api, orientation, action, side],
   );
 
   useEffect(() => {
-    if (!apiRef.current) return;
+    if (!api || !pages.length) return;
 
-    const api = apiRef.current;
-    const snaps = api.scrollSnapList();
-    if (!snaps.length) return;
+    const handleInitialScroll = () => {
+      const count = api.scrollSnapList().length;
+      if (count > 0) {
+        const target = side === "right" ? count - 1 : 0;
+        api.scrollTo(target, true);
+      }
+    };
 
-    if (side === "right") {
-      api.scrollTo(snaps.length - 1, true);
-    } else {
-      api.scrollTo(0, true);
+    handleInitialScroll();
+
+    api.on("reInit", handleInitialScroll);
+
+    return () => {
+      api.off("reInit", handleInitialScroll);
+    };
+  }, [api, side, pages]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const isTyping = ["INPUT", "TEXTAREA"].includes(
+      document.activeElement?.tagName || "",
+    );
+
+    if (!isTyping) {
+      el.focus();
     }
-  }, [side]);
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    el.focus();
     el.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -85,7 +114,7 @@ export default function CarouselView({
         <Carousel
           orientation={"horizontal"}
           className="max-h-screen"
-          setApi={(api) => (apiRef.current = api)}
+          setApi={setApi}
         >
           <CarouselContent className="m-0">
             {pages.map((src, index) => (
@@ -119,7 +148,7 @@ export default function CarouselView({
         <Carousel
           orientation="vertical"
           className="h-screen w-full"
-          setApi={(api) => (apiRef.current = api)}
+          setApi={setApi}
         >
           <CarouselContent className="h-screen m-0">
             {pages.map((src, index) => (

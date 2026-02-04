@@ -160,9 +160,11 @@ export function MangaContent({
               )}
             </Button>
           )}
-          <Button variant={"ghost"} className="h-11.5">
-            <Download className="size-6" />
-          </Button>
+          {session && session.user.role === "ADMIN" && (
+            <Button variant={"ghost"} className="h-11.5">
+              <Download className="size-6" />
+            </Button>
+          )}
         </div>
         {data.attributes.availableTranslatedLanguages.length > 0 && (
           <MangaLangDropdown
