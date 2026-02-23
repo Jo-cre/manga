@@ -18,6 +18,7 @@ export interface MangaDexManga {
       en?: string;
     };
     status: string;
+    links: LinkString;
   };
   relationships: MangaDexRelationship[];
 }

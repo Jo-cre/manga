@@ -21,6 +21,12 @@
     "numberOfPages": "Numero de paginas"
   },
 
+  "home": {
+    "popular": "Mangas Populares",
+    "new": "Novos Mangas",
+    "continue": "Continuar lendo"
+  },
+
   "UserPage": {
     "name": "Nome",
     "email": "Email",
