@@ -71,7 +71,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name as string;
         session.user.image = token.image as string | null;
         session.user.banner = token.banner as string | null;
-        session.user.role = token.role as string;
+        session.user.role = token.role as "USER" | "ADMIN";
         session.user.createdAt = token.createdAt as Date;
       }
 
