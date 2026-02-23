@@ -1,4 +1,4 @@
-import { MangaDexManga } from "@/lib/manga/types";
+import { MangaAttributes, MangaDexManga } from "@/lib/manga/types";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -23,11 +23,11 @@ export async function GET() {
           const coverUrl = `https://uploads.mangadex.org/covers/${manga.id}/${coverRel.attributes.fileName}`;
 
           if (!manga.attributes) {
-            manga.attributes = {} as any;
+            manga.attributes = {} as MangaAttributes;
           }
 
           if (!manga.attributes.links) {
-            manga.attributes.links = {} as any;
+            manga.attributes.links = {} as MangaAttributes["links"];
           }
 
           manga.attributes.links.cover = coverUrl;
@@ -36,7 +36,7 @@ export async function GET() {
     }
 
     return NextResponse.json(data);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch manga data" },
       { status: 500 },
