@@ -52,10 +52,10 @@ export default function LibraryPage() {
               return (
                 <div
                   key={m.id}
-                  className="group rounded-lg hover:scale-105 border bg-background overflow-hidden transition hover:shadow-md"
+                  className="group bg-background overflow-hidden cursor-pointer transition hover:shadow-md"
                   onClick={() => router.push(`/manga/${m?.id}`)}
                 >
-                  <div className="relative aspect-2/3 bg-muted">
+                  <div className="relative aspect-[1/1.414] bg-muted rounded-md overflow-hidden">
                     {m?.cover && (
                       <Image
                         src={m.cover!}
@@ -69,9 +69,6 @@ export default function LibraryPage() {
                     <h3 className="text-sm font-medium line-clamp-2">
                       {m.title}
                     </h3>
-                    <span className="text-xs text-muted-foreground capitalize">
-                      {m.status}
-                    </span>
                   </div>
                 </div>
               );

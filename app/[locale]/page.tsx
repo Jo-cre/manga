@@ -10,6 +10,9 @@ export default async function Home() {
   const session = await getServerSession(authOptions);
   const t = await getTranslations("home");
 
+  const progressMangas: { data: Manga[] } = { data: [] };
+  const userProgress: { data: readingProgress[] } = { data: [] };
+
   const popularRes: Response = await fetch(
     `${process.env.API_URL}/api/manga/popular`,
     {
@@ -31,7 +34,6 @@ export default async function Home() {
   }
   const newMangas: { data: Manga[] } = await newRes.json();
 
-  const progressMangas: { data: Manga[] } = { data: [] };
   if (session) {
     const progressRes: Response = await fetch(
       `${process.env.API_URL}/api/user/progress/${session.user.id}/manga`,
@@ -41,10 +43,10 @@ export default async function Home() {
       throw new Error("Network response was not ok");
     }
 
-    const mangas: readingProgress[] = await progressRes.json();
-    if (mangas && mangas.length > 0) {
+    userProgress.data = await progressRes.json();
+    if (userProgress && userProgress.data.length > 0) {
       progressMangas.data = await Promise.all(
-        mangas.map(async (p) => {
+        userProgress.data.map(async (p) => {
           const res = await fetch(
             `${process.env.API_URL}/api/manga/${p.mangaId}`,
             {
@@ -55,7 +57,24 @@ export default async function Home() {
           return json.data;
         }),
       );
-      progressMangas.data = await Promise.all(progressMangas.data);
+
+      userProgress.data.sort((a, b) => {
+        return (
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+      });
+
+      progressMangas.data = (await Promise.all(progressMangas.data)).sort(
+        (a, b) => {
+          const aProgress = userProgress.data.find((m) => m.mangaId === a.id);
+          const bProgress = userProgress.data.find((m) => m.mangaId === b.id);
+          if (!aProgress || !bProgress) return 0;
+          return (
+            new Date(bProgress.updatedAt).getTime() -
+            new Date(aProgress.updatedAt).getTime()
+          );
+        },
+      );
     }
   }
 
@@ -67,7 +86,8 @@ export default async function Home() {
         <MangaCarousel
           title={t("continue")}
           data={progressMangas.data}
-          type="md"
+          progressData={userProgress.data}
+          type="chapter"
         />
       )}
       <MangaCarousel title={t("new")} data={newMangas.data} type="sm" />
