@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const res = await fetch(
-      "https://api.mangadex.org/manga?limit=5&order[followedCount]=desc&includes[]=cover_art",
+      "https://api.mangadex.org/manga?limit=10&order[followedCount]=desc&includes[]=cover_art",
     );
 
     if (!res.ok) {
