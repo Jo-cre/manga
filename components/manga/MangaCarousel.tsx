@@ -13,8 +13,16 @@ import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import { getTitle } from "@/lib/manga/getTitle";
 import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookmarkCheck, BookmarkPlus } from "lucide-react";
 import { readingProgress } from "@/lib/user/types";
+import { useSession } from "next-auth/react";
+import { Button } from "../ui/button";
+import {
+  addToLibrary,
+  checkInLibrary,
+  removeFromLibrary,
+} from "@/lib/user/library";
+import { useState } from "react";
 
 export default function MangaCarousel({
   data,
@@ -29,6 +37,20 @@ export default function MangaCarousel({
 }) {
   const locale = useLocale();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const [isInLibrary, setIsInLibrary] = useState(false);
+
+  function checkLibrary(manga: string) {
+    if (!session?.user?.id || !manga) return;
+
+    const fetchInLibrary = async () => {
+      const libdata = await checkInLibrary(session.user.id, manga);
+      setIsInLibrary(libdata);
+    };
+
+    fetchInLibrary();
+  }
 
   if (type === "lg")
     return (
@@ -137,10 +159,13 @@ export default function MangaCarousel({
             {data.map((manga) => (
               <CarouselItem
                 key={manga.id}
-                className="basis-full sm:basis-1/3 lg:basis-1/6"
-                onClick={() => router.push(`/manga/${manga.id}`)}
+                className="basis-full sm:basis-1/3 lg:basis-1/6 group"
+                onMouseEnter={() => session && checkLibrary(manga.id)}
               >
-                <div className="relative w-full aspect-[1/1.414] overflow-hidden rounded-md cursor-pointer bg-muted">
+                <div
+                  className="relative w-full aspect-[1/1.414] overflow-hidden rounded-md cursor-pointer bg-muted"
+                  onClick={() => router.push(`/manga/${manga.id}`)}
+                >
                   {manga.attributes.links["cover"] && (
                     <Image
                       src={manga.attributes.links["cover"]}
@@ -151,6 +176,26 @@ export default function MangaCarousel({
                     />
                   )}
                 </div>
+                {session && (
+                  <Button
+                    variant={"default"}
+                    className={`bg-primary/75 hover:bg-primary h-11.5 text-2xl font-bold absolute not-group-hover:opacity-0 opacity-100 bottom-14 right-2 transition-all duration-300`}
+                    onClick={() => {
+                      const h = () =>
+                        isInLibrary
+                          ? removeFromLibrary(session?.user.id, manga.id)
+                          : addToLibrary(session?.user.id, manga.id);
+                      h();
+                      setIsInLibrary(!isInLibrary);
+                    }}
+                  >
+                    {isInLibrary ? (
+                      <BookmarkCheck className="size-6" />
+                    ) : (
+                      <BookmarkPlus className="size-6" />
+                    )}
+                  </Button>
+                )}
                 <p className="mt-2 text-sm font-medium line-clamp-2">
                   {getTitle(manga, locale)}
                 </p>

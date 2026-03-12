@@ -4,6 +4,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -120,7 +121,7 @@ export default function CarouselView({
             {pages.map((src, index) => (
               <CarouselItem
                 key={index}
-                className="p-0 flex max-h-screen items-center justify-center"
+                className="relative p-0 flex max-h-screen items-center justify-center"
               >
                 <Image
                   src={src}
@@ -131,6 +132,7 @@ export default function CarouselView({
                   className={`object-contain min-h-full max-h-full w-auto`}
                   loading="lazy"
                 />
+                <Loader2 className="absolute size-12 animate-spin -z-1" />
               </CarouselItem>
             ))}
           </CarouselContent>

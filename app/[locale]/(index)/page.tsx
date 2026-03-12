@@ -2,7 +2,7 @@ import MangaCarousel from "@/components/manga/MangaCarousel";
 import Topbar from "@/components/Topbar";
 import { Manga } from "@/lib/manga/types";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { readingProgress } from "@/lib/user/types";
 import { getTranslations } from "next-intl/server";
 

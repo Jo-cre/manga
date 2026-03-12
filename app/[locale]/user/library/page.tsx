@@ -1,5 +1,6 @@
 "use client";
 import Topbar from "@/components/Topbar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { searchManga } from "@/lib/manga/getManga";
 import { MangaSearchResult } from "@/lib/manga/types";
 import { getLibrary } from "@/lib/user/library";
@@ -44,7 +45,7 @@ export default function LibraryPage() {
   return (
     <div className="flex flex-1 flex-col">
       <Topbar margin />
-      {mangas && (
+      {mangas ? (
         <div className="p-4">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-4">
             {mangas?.map((m) => {
@@ -76,6 +77,17 @@ export default function LibraryPage() {
           </div>
 
           {!mangas && <p className="text-sm text-muted-foreground mt-4"></p>}
+        </div>
+      ) : (
+        <div className="p-4">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="aspect-[1/1.414] rounded-md" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

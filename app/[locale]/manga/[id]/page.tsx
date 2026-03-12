@@ -24,10 +24,7 @@ export default async function MangaPage({
   return (
     <div className="flex flex-1 flex-col relative min-h-screen">
       <Topbar />
-
-      {/* Parallax background */}
       <MangaBackground src={data.attributes.links["cover"]} alt={data.id} />
-
       <MangaContent data={data} locale={locale} />
     </div>
   );
