@@ -228,7 +228,7 @@ export default function MangaCarousel({
               >
                 <div className="flex items-stretch w-full">
                   <div
-                    className="relative flex-none w-1/2 aspect-[1/1.414] overflow-hidden rounded-l-md cursor-pointer"
+                    className="relative flex-none w-1/2 aspect-[1/1.414] overflow-hidden rounded-l-md cursor-pointer bg-muted"
                     onClick={() => router.push(`/manga/${manga.id}`)}
                   >
                     {manga.attributes.links["cover"] && (
